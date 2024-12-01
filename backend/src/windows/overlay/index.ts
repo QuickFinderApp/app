@@ -31,6 +31,7 @@ export const createOverlayWindow = (): void => {
     },
     movable: true,
     transparent: true,
+    hasShadow: false,
     frame: false,
     resizable: false,
     alwaysOnTop: true,

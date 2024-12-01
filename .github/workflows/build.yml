@@ -48,7 +48,7 @@ jobs:
           cp ./backend/out/make/deb/**/*.deb distributables/deb/
           cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/
           cd distributables
-          zip -r quickutils-linux.zip *
+          zip -r quickfinder-linux.zip *
           cd ..
 
       - name: Archive the build (Windows)
@@ -101,7 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/quickutils-linux.zip
+          asset_path: ./artifacts/build-ubuntu-latest/quickfinder-linux.zip
           asset_name: quickfinder-linux.zip
           asset_content_type: application/zip
 
@@ -112,5 +112,5 @@ jobs:
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ./artifacts/build-macos-latest/QuickFinder.dmg
-          asset_name: quickutils-macos.dmg
+          asset_name: quickfinder-macos.dmg
           asset_content_type: application/octet-stream
