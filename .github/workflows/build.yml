@@ -93,25 +93,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Asset (Ubuntu)
+      - name: Upload Release Asset (Ubuntu - deb)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/quickutils-linux.zip
-          asset_name: quickutils-linux.zip
-          asset_content_type: application/zip
+          asset_path: ./artifacts/build-ubuntu-latest/deb/quick-finder_*.deb
+          asset_name: quickfinder-linux.deb
+          asset_content_type: application/deb
 
-      - name: Upload Release Asset (Windows)
+      - name: Upload Release Asset (Ubuntu - rpm)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-windows-latest/quickutils-windows.zip
-          asset_name: quickutils-windows.zip
-          asset_content_type: application/zip
+          asset_path: ./artifacts/build-ubuntu-latest/rpm/quick-finder-*.rpm
+          asset_name: quickfinder-linux.rpm
+          asset_content_type: application/rpm
 
       - name: Upload Release Asset (macOS)
         uses: actions/upload-release-asset@v1
@@ -119,6 +119,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-macos-latest/QuickUtils-arm64.dmg
+          asset_path: ./artifacts/build-macos-latest/QuickFinder-*.dmg
           asset_name: quickutils-macos.dmg
           asset_content_type: application/octet-stream
