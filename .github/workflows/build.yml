@@ -46,7 +46,7 @@ jobs:
           cp ./backend/out/make/deb/**/*.deb distributables/deb/
           cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/
           cd distributables
-          zip -r ../quickutils-linux-arm64.zip *
+          zip -r ../quickutils-linux.zip *
           cd ..
 
       - name: Archive the build (Windows)

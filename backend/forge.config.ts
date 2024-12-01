@@ -34,11 +34,13 @@ const config: ForgeConfig = {
     // Linux
     new MakerRpm({
       "options": {
+        "name": "quick-finder",
         "genericName": "QuickFinder",
       }
     }),
     new MakerDeb({
       "options": {
+        "name": "quick-finder",
         "genericName": "QuickFinder",
       }
     })
