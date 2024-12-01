@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "start": "cd backend && npm run start",
+    "code": "code ./frontend && code ./backend",
+    "make": "cd backend && npm run make"
+  }
+}

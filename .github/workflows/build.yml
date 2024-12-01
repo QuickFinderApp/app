@@ -1,0 +1,123 @@
+name: Build and Release Electron App
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Package and Build the Electron app
+        run: |
+          npm run package
+          npm run make
+        working-directory: ./backend
+
+      - name: Archive the build (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          zip -r ../../../distributables/quickutils-linux.zip *
+          cd ../../..
+
+      - name: Archive the build (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          powershell Compress-Archive -Path * -DestinationPath ../../../distributables/quickutils-windows.zip
+          cd ../../..
+
+      - name: Collect built distributables (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          cp * ../../../distributables
+          cd ../../..
+
+      - name: Upload the build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ matrix.os }}
+          path: distributables/*
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ./artifacts
+
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset (Ubuntu)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/build-ubuntu-latest/quickutils-linux.zip
+          asset_name: quickutils-linux.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset (Windows)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/build-windows-latest/quickutils-windows.zip
+          asset_name: quickutils-windows.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset (macOS)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/build-macos-latest/QuickUtils-arm64.dmg
+          asset_name: quickutils-macos.dmg
+          asset_content_type: application/octet-stream
