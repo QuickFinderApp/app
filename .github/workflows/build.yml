@@ -4,6 +4,8 @@ on:
   release:
     types: [prereleased]
 
+permissions: write-all
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
