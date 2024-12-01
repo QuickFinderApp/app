@@ -43,8 +43,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir -p distributables/deb distributables/rpm
-          cp ./backend/out/make/deb/arm64/*.deb distributables/deb/
-          cp ./backend/out/make/rpm/arm64/*.rpm distributables/rpm/
+          cp ./backend/out/make/deb/**/*.deb distributables/deb/
+          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/
           cd distributables
           zip -r ../quickutils-linux-arm64.zip *
           cd ..
