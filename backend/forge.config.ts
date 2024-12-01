@@ -33,15 +33,15 @@ const config: ForgeConfig = {
 
     // Linux
     new MakerRpm({
-      "options": {
-        "name": "quick-finder",
-        "genericName": "QuickFinder",
+      options: {
+        name: "quick-finder",
+        genericName: "QuickFinder"
       }
     }),
     new MakerDeb({
-      "options": {
-        "name": "quick-finder",
-        "genericName": "QuickFinder",
+      options: {
+        name: "quick-finder",
+        genericName: "QuickFinder"
       }
     })
   ],
@@ -55,10 +55,18 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             name: "main_window",
-            html: "./src/out/index.html",
+            html: "./src/out/spotter.html",
             js: "./src/renderer.ts",
             preload: {
               js: "./src/preload.ts"
+            }
+          },
+          {
+            name: "overlay_window",
+            html: "./src/out/overlay.html",
+            js: "./src/windows/overlay/renderer.ts",
+            preload: {
+              js: "./src/windows/overlay/preload.ts"
             }
           }
         ]

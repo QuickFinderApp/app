@@ -26,5 +26,9 @@ contextBridge.exposeInMainWorld("spotter", {
   },
   quit: () => {
     return ipcRenderer.invoke("quit-app");
+  },
+
+  launchConfetti: () => {
+    return ipcRenderer.invoke("launch-confetti");
   }
 });

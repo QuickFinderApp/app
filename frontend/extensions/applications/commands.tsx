@@ -1,7 +1,7 @@
 "use client";
 
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
-import { ApplicationItem } from "@/components/spotter/types/others/spotter-global";
+import { ApplicationItem } from "@/components/spotter/types/others/globals";
 import { openApp } from "@/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 

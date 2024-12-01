@@ -137,9 +137,6 @@ export function RouterProvider({ children, config }: RouterProviderProps) {
     }),
     [push, pop, popToRoot, replace, popTo, stack, currentPage]
   );
-  useEffect(() => {
-    console.log("stack", stack);
-  }, [stack]);
 
   function ErrorFallback({ error, resetErrorBoundary: resetter }: FallbackProps) {
     errorBoundaryResetter.current = resetter;

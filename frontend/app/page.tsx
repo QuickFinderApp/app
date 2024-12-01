@@ -1,5 +1,12 @@
-import SpotterHome from "@/components/spotter/pages/home";
-
 export default function Home() {
-  return <SpotterHome />;
+  return (
+    <>
+      <h1>Welcome!</h1>
+      <span>You have reached the home page of QuickFinder.</span>
+      <br />
+      <a href="/spotter" className="underline">
+        Open Spotter
+      </a>
+    </>
+  );
 }

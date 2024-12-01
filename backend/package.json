@@ -45,7 +45,6 @@
   "dependencies": {
     "@electron-forge/maker-dmg": "^7.6.0",
     "@expo/plist": "^0.2.0",
-    "electron-acrylic-window": "^0.5.11",
     "electron-squirrel-startup": "^1.0.1"
   }
 }

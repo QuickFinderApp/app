@@ -16,6 +16,12 @@ declare global {
     show: () => void;
     hide: () => void;
     quit: () => void;
+
+    launchConfetti: () => void;
+  };
+
+  const overlay: {
+    onConfetti: (callback: () => void) => void;
   };
 }
 

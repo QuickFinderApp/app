@@ -1,8 +1,9 @@
 "use client";
 
+import { ConfettiCommand } from "./confetti";
 import { QuitApp } from "./quit-app";
 
-const initialCommands = [QuitApp];
+const initialCommands = [QuitApp, ConfettiCommand];
 const commands = initialCommands.map((command) => {
   return {
     extensionId: "main",

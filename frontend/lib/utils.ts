@@ -35,3 +35,7 @@ export function openFileLocation(filePath: string) {
 export function quitApp() {
   return spotter.quit();
 }
+
+export function confetti() {
+  return spotter.launchConfetti();
+}
