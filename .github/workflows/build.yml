@@ -27,7 +27,7 @@ jobs:
           python-version: "3.9"
 
       - name: Install frontend dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
         working-directory: ./frontend
 
       - name: Install backend dependencies
