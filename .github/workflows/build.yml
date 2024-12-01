@@ -46,7 +46,7 @@ jobs:
           cp ./backend/out/make/deb/**/*.deb distributables/deb/
           cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/
           cd distributables
-          zip -r ../quickutils-linux.zip *
+          zip -r quickutils-linux.zip *
           cd ..
 
       - name: Archive the build (Windows)
@@ -62,7 +62,7 @@ jobs:
         run: |
           mkdir distributables
           cd ./backend/out/make
-          cp * ../../../distributables
+          cp *.dmg ../../../distributables/QuickFinder.dmg
           cd ../../..
 
       - name: Upload the build artifacts
@@ -93,25 +93,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Asset (Ubuntu - deb)
+      - name: Upload Release Asset (Ubuntu)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/deb/quick-finder_*.deb
-          asset_name: quickfinder-linux.deb
-          asset_content_type: application/deb
-
-      - name: Upload Release Asset (Ubuntu - rpm)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/rpm/quick-finder-*.rpm
-          asset_name: quickfinder-linux.rpm
-          asset_content_type: application/rpm
+          asset_path: ./artifacts/build-ubuntu-latest/quickutils-linux.zip
+          asset_name: quickfinder-linux.zip
+          asset_content_type: application/zip
 
       - name: Upload Release Asset (macOS)
         uses: actions/upload-release-asset@v1
@@ -119,6 +109,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-macos-latest/QuickFinder-*.dmg
+          asset_path: ./artifacts/build-macos-latest/QuickFinder.dmg
           asset_name: quickutils-macos.dmg
           asset_content_type: application/octet-stream
