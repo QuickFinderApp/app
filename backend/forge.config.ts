@@ -19,6 +19,7 @@ const REGENERATE_FRONTEND = true;
 
 const config: ForgeConfig = {
   packagerConfig: {
+    executableName: "QuickFinder",
     asar: true,
     icon: "icons/macos/AppIcon.icns"
   },

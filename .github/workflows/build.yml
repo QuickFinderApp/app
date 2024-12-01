@@ -36,7 +36,6 @@ jobs:
 
       - name: Package and Build the Electron app
         run: |
-          npm run package
           npm run make
         working-directory: ./backend
 
