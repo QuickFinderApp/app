@@ -19,7 +19,7 @@ const REGENERATE_FRONTEND = true;
 
 const config: ForgeConfig = {
   packagerConfig: {
-    executableName: "QuickFinder",
+    executableName: "quick-finder",
     asar: true,
     icon: "icons/macos/AppIcon.icns"
   },
@@ -32,8 +32,16 @@ const config: ForgeConfig = {
     new MakerDMG(),
 
     // Linux
-    new MakerRpm({}),
-    new MakerDeb({})
+    new MakerRpm({
+      "options": {
+        "genericName": "QuickFinder",
+      }
+    }),
+    new MakerDeb({
+      "options": {
+        "genericName": "QuickFinder",
+      }
+    })
   ],
   plugins: [
     new AutoUnpackNativesPlugin({}),

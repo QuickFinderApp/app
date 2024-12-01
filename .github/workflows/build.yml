@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -42,17 +42,19 @@ jobs:
       - name: Archive the build (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          mkdir distributables
-          cd ./backend/out/make
-          zip -r ../../../distributables/quickutils-linux.zip *
-          cd ../../..
+          mkdir -p distributables/deb distributables/rpm
+          cp ./backend/out/make/deb/arm64/*.deb distributables/deb/
+          cp ./backend/out/make/rpm/arm64/*.rpm distributables/rpm/
+          cd distributables
+          zip -r ../quickutils-linux-arm64.zip *
+          cd ..
 
       - name: Archive the build (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           mkdir distributables
           cd ./backend/out/make
-          powershell Compress-Archive -Path * -DestinationPath ../../../distributables/quickutils-windows.zip
+          powershell Compress-Archive -Path * -DestinationPath ../../../distributables/quickfinder-windows.zip
           cd ../../..
 
       - name: Collect built distributables (macOS)
