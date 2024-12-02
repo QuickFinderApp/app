@@ -14,6 +14,19 @@ export const CommonKeyCombos = {
         return [];
     }
   },
+  Escape: () => {
+    const os = getOS();
+    switch (os) {
+      case "Mac":
+        return [KeyName.Escape];
+      case "Windows":
+        return [KeyName.Escape];
+      case "Linux":
+        return [KeyName.Escape];
+      default:
+        return [];
+    }
+  },
   LeftPage: () => {
     const os = getOS();
     switch (os) {

@@ -2,6 +2,7 @@
 
 import { Spotter } from "@/components/spotter/spotter/spotter";
 import MainCommands from "@/extensions/main/commands";
+import SystemCommands from "@/extensions/system/commands";
 import DebugCommands from "@/extensions/debug/commands";
 import { generatePageKey, useRouter } from "@/lib/stack-router";
 import React from "react";
@@ -9,7 +10,7 @@ import { SpotterCommand, SpotterCommandType } from "../types/others/commands";
 import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
 import { useApplicationCommands } from "@/extensions/applications/commands";
-import { openFileLocation } from "@/lib/utils";
+import { openFileLocation, openLink } from "@/lib/utils";
 
 function getActionText(commandType: SpotterCommandType): string {
   if (commandType == "Application") {
@@ -48,7 +49,8 @@ export default function SpotterHome() {
 
   const appCommands = useApplicationCommands();
 
-  const availableCommands: SpotterCommand[] = [...MainCommands, ...DebugCommands, ...appCommands];
+  const availableCommands: SpotterCommand[] = [...MainCommands, ...SystemCommands, ...DebugCommands, ...appCommands];
+  // TODO: Custom Sorting Algo & Limit Amount of Showing Commands (75 to prevent lag)
 
   const items: SpotterListItem[] = availableCommands.map((command) => {
     let id = command.id;
@@ -65,8 +67,10 @@ export default function SpotterHome() {
         onAction: (context) => executeCommand(command, context),
         isPrimary: true,
         shortcut: "Enter"
-      }
+      },
+      ...(command.actionMenu?.items || [])
     ];
+
     if (command.filePath) {
       actionMenuItems.push({
         type: "Action",
@@ -76,6 +80,19 @@ export default function SpotterHome() {
         onAction: () => {
           if (command.filePath) {
             openFileLocation(command.filePath);
+          }
+        }
+      });
+    }
+    if (command.webLink) {
+      actionMenuItems.push({
+        type: "Action",
+        id: "OpenWebLink",
+        icon: "Link",
+        title: "Open Link",
+        onAction: () => {
+          if (command.webLink) {
+            openLink(command.webLink);
           }
         }
       });

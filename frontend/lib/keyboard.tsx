@@ -237,12 +237,13 @@ export function useAlwaysFocus(inputRef: RefObject<HTMLInputElement>) {
 // Components
 type KeyComboHintProps = {
   combo: KeyCombo;
+  hasBackground?: boolean;
 };
-function InternalKeyComboHint({ combo }: KeyComboHintProps) {
+function InternalKeyComboHint({ combo, hasBackground }: KeyComboHintProps) {
   return (
     <>
       {combo.map((key, index) => (
-        <KeybindHint key={index} hint={key} />
+        <KeybindHint key={index} hint={key} hasBackground={hasBackground} />
       ))}
     </>
   );

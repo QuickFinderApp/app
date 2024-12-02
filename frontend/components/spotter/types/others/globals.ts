@@ -18,6 +18,8 @@ declare global {
     quit: () => void;
 
     launchConfetti: () => void;
+
+    runSystemAction: (action: string) => Promise<boolean>;
   };
 
   const overlay: {

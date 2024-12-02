@@ -6,7 +6,7 @@ import { useReward } from "react-rewards";
 
 const CONFETTI_LIFETIME = 200;
 const CONFETTI_SIZE = 25;
-const CONFETTI_START_VELOCITY = 20;
+const CONFETTI_START_VELOCITY = 25;
 const CONFETTI_DECAY = 0.985;
 const CONFETTI_SPREAD = 90;
 const CONFETTI_AMOUNT = 150;

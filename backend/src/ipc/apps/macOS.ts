@@ -1,6 +1,7 @@
 import path from "path";
 import fsPromises from "fs/promises";
 import { fileIconToBuffer } from "../../../dependencies/file-icon/index";
+import os from "os";
 
 async function getFileIcon(path: string): Promise<string | null> {
   try {
@@ -13,13 +14,15 @@ async function getFileIcon(path: string): Promise<string | null> {
   }
 }
 
-export async function getMacApplications(): Promise<{ name: string; icon: string; path: string }[]> {
-  // TODO: Windows & Linux Support (This is just for MacOS)
+const MAX_DEPTH = 1;
+async function getMacApplicationsInDirectory(
+  appsDir: string,
+  depth = 0
+): Promise<{ name: string; icon: string; path: string }[]> {
   try {
-    const appsDir = "/Applications";
     const entries = await fsPromises.readdir(appsDir, { withFileTypes: true });
 
-    const apps = Promise.all(
+    const apps = await Promise.all(
       entries
         .filter((entry) => entry.isDirectory() && entry.name.endsWith(".app"))
         .map(async (entry) => {
@@ -34,9 +37,47 @@ export async function getMacApplications(): Promise<{ name: string; icon: string
         })
     );
 
+    if (depth < MAX_DEPTH) {
+      depth += 1;
+
+      const appsInFolderPromises = entries
+        .filter((entry) => entry.isDirectory() && !entry.name.endsWith(".app"))
+        .map(async (entry) => {
+          const folderPath = path.join(entry.parentPath, entry.name);
+          const appsInFolders = getMacApplicationsInDirectory(folderPath, depth);
+          (await appsInFolders).forEach((app) => {
+            apps.push(app);
+          });
+        });
+
+      await Promise.all(appsInFolderPromises);
+    }
+
     return apps;
   } catch (error) {
     console.error("Error reading applications:", error);
     return [];
   }
+}
+
+export async function getMacApplications(): Promise<{ name: string; icon: string; path: string }[]> {
+  const applicationsPath = "/Applications";
+  const systemApplicationsPath = "/System/Applications";
+  const userApplicationsPath = path.join(os.homedir(), "Applications");
+
+  const directories = [applicationsPath, systemApplicationsPath, userApplicationsPath];
+
+  const applications: { name: string; icon: string; path: string }[] = [];
+
+  const promises = directories.map(async (dir) => {
+    await getMacApplicationsInDirectory(dir).then((appsFound) => {
+      appsFound.forEach((app) => {
+        applications.push(app);
+      });
+    });
+  });
+
+  await Promise.all(promises);
+
+  return applications;
 }

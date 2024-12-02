@@ -2,7 +2,7 @@
 
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
 import { ApplicationItem } from "@/components/spotter/types/others/globals";
-import { openApp } from "@/lib/utils";
+import { hideSpotter, openApp } from "@/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 
 async function getAllApplications() {
@@ -13,26 +13,33 @@ async function getAllApplications() {
   }
 }
 
+const extensionInfo = {
+  extensionId: "applications",
+  extensionName: "Applications",
+  extensionIcon: "AppWindow"
+};
+
 export function useApplicationCommands() {
+  const [isLoading, setIsLoading] = useState(true);
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
 
   useEffect(() => {
     // TODO: Cache this and return stale as its refreshing
     getAllApplications().then((apps) => {
+      setIsLoading(false);
       setApplications(apps);
     });
   }, []);
 
   const applicationCommands = useMemo((): SpotterCommand[] => {
-    return applications.map((app) => {
+    const appCommands: SpotterCommand[] = applications.map((app) => {
       function execute() {
         openApp(app.path);
+        hideSpotter();
       }
 
       return {
-        extensionId: "applications",
-        extensionName: "Applications",
-        extensionIcon: "AppWindow",
+        ...extensionInfo,
 
         icon: app.icon || "FileQuestion",
         id: app.name,
@@ -42,7 +49,21 @@ export function useApplicationCommands() {
         execute
       };
     });
-  }, [applications]);
+
+    if (isLoading) {
+      appCommands.push({
+        ...extensionInfo,
+
+        icon: "FileQuestion",
+        id: "LoadingApplications",
+        title: "Loading Applications...",
+        type: "Application",
+        execute: () => {}
+      });
+    }
+
+    return appCommands;
+  }, [isLoading, applications]);
 
   return applicationCommands;
 }

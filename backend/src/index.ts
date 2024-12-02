@@ -41,7 +41,6 @@ const createSpotterWindow = (): void => {
       devTools: devMode
     },
     movable: true,
-    transparent: true,
     frame: false,
     resizable: false,
     show: false,
@@ -92,7 +91,7 @@ const createSpotterWindow = (): void => {
 
 ipc.init();
 ipcMain.handle("open-spotter", () => spotterWindow?.show());
-ipcMain.handle("close-spotter", () => spotterWindow?.hide());
+ipcMain.handle("hide-spotter", () => spotterWindow?.hide());
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

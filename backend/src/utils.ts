@@ -7,6 +7,6 @@ export function getFocusedDisplay() {
 
 export function getFocusedDisplayBounds() {
   const display = getFocusedDisplay();
-  const workArea = display.workArea;
-  return workArea;
+  const bounds = display.bounds;
+  return bounds;
 }

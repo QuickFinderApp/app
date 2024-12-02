@@ -30,5 +30,9 @@ contextBridge.exposeInMainWorld("spotter", {
 
   launchConfetti: () => {
     return ipcRenderer.invoke("launch-confetti");
+  },
+
+  runSystemAction: (action: string) => {
+    return ipcRenderer.invoke("system-action", action);
   }
 });

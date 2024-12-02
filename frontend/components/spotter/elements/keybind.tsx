@@ -5,6 +5,7 @@ import { CornerDownLeft } from "lucide-react";
 
 type KeybindHintProps = {
   hint: string;
+  hasBackground?: boolean;
 };
 
 const keyHints = [
@@ -46,7 +47,7 @@ const keyHints = [
   }
 ];
 
-export function KeybindHint({ hint }: KeybindHintProps) {
+export function KeybindHint({ hint, hasBackground = true }: KeybindHintProps) {
   const keyHint = keyHints.find((k) => k.keys.some((key) => key.toLowerCase() === hint.toLowerCase()));
 
   let elementHint: JSX.Element | null = null;
@@ -61,10 +62,14 @@ export function KeybindHint({ hint }: KeybindHintProps) {
   return (
     <div className="flex items-center gap-1">
       {elementHint && (
-        <div className={cn("rounded px-0.5 py-0.5 text-xs font-semibold", "bg-text-100")}>{elementHint}</div>
+        <div className={cn("rounded px-0.5 py-0.5 text-xs font-semibold", hasBackground && "bg-text-100")}>
+          {elementHint}
+        </div>
       )}
       {!elementHint && textHint && (
-        <kbd className={cn("rounded px-1.5 py-0.5 text-xs font-semibold", "bg-text-100")}>{textHint.toUpperCase()}</kbd>
+        <kbd className={cn("rounded px-1.5 py-0.5 text-xs font-semibold", hasBackground && "bg-text-100")}>
+          {textHint.toUpperCase()}
+        </kbd>
       )}
     </div>
   );

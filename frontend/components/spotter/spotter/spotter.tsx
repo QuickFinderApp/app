@@ -21,6 +21,11 @@ import { SpotterData, SpotterLayout } from "../types/layouts/layouts";
 import { SpotterAction } from "../types/others/action-menu";
 import { getActionMenuState, useActionMenu } from "./action-menu";
 import { BatteryIndicator } from "../elements/battery-indicator";
+import { ConfirmationData, ConfirmationFinishAction } from "../types/others/confirmation";
+import { Icon } from "../elements/icon";
+import { setAlertCallback } from "@/lib/alert";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { motion } from "motion/react";
 
 const SCROLL_INCREMENTS = 200;
 
@@ -185,11 +190,117 @@ function SpotterFooter({
   );
 }
 
+function SpotterConfirmation({
+  title,
+  icon,
+  message,
+  primaryAction = { title: "Confirm", style: "Default" },
+  secondaryAction = { title: "Cancel", style: "Cancel" },
+  onFinish,
+  setConfirmation
+}: ConfirmationData & { setConfirmation: (newState: ConfirmationData | null) => void }) {
+  function selectedOption(option: ConfirmationFinishAction) {
+    onFinish(option);
+    setTimeout(() => setConfirmation(null), 50);
+  }
+
+  const enterCombo = CommonKeyCombos.Enter();
+  const escapeCombo = CommonKeyCombos.Escape();
+  useKeyCombo(enterCombo, () => selectedOption("Primary"));
+  useKeyCombo(escapeCombo, () => selectedOption("Secondary"));
+
+  return (
+    <motion.div
+      className="z-50 absolute flex flex-col justify-center items-center h-full w-full max-h-screen bg-black bg-opacity-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.1 }}
+    >
+      <motion.div
+        className={cn("w-96 rounded-xl", "dark:bg-gray-900", "border border-border")}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.1 }}
+      >
+        <div className="w-full h-full bg-text-100 p-6">
+          <div className="flex flex-col items-center space-y-2">
+            {icon && (
+              <div className="h-10 w-10 flex items-center justify-center">
+                <Icon width={10} height={10} src={icon} />
+              </div>
+            )}
+            <div>
+              <h2 className="text-lg font-medium text-text text-center">{title}</h2>
+              <h2 className="text-sm font-medium text-text-600 text-center">{message}</h2>
+            </div>
+          </div>
+          <div className="flex space-x-2 mt-6">
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    className={cn(
+                      "flex-1",
+                      secondaryAction.style == "Default" && "text-text",
+                      secondaryAction.style == "Cancel" && "text-text-600",
+                      secondaryAction.style == "Destructive" && "text-red"
+                    )}
+                    onClick={() => selectedOption("Secondary")}
+                  >
+                    {secondaryAction.title}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent
+                  className={cn("flex flex-row justify-center items-center gap-1", !escapeCombo && "opacity-0")}
+                >
+                  <KeyComboHint combo={escapeCombo} hasBackground={false} />
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    className={cn(
+                      "flex-1",
+                      primaryAction.style == "Default" && "text-text",
+                      primaryAction.style == "Cancel" && "text-text-600",
+                      primaryAction.style == "Destructive" && "text-red"
+                    )}
+                    onClick={() => selectedOption("Primary")}
+                  >
+                    {primaryAction.title}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent
+                  className={cn("flex flex-row justify-center items-center gap-1", !enterCombo && "opacity-0")}
+                >
+                  <KeyComboHint combo={enterCombo} hasBackground={false} />
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function Spotter({ data: spotterData }: { data: SpotterData }) {
+  const [confirmation, setConfirmation] = useState<ConfirmationData | null>(null);
+
+  useEffect(() => {
+    setAlertCallback(setConfirmation);
+  }, []);
+
   let canRunAction: (action: SpotterAction) => boolean = () => false;
   let runActionArguments = {};
   function runAction(action: SpotterAction) {
     if (!canRunAction(action)) return;
+    if (confirmation) return;
 
     action.onAction({
       arguments: runActionArguments
@@ -224,6 +335,7 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
     if (newState == true && !showActionMenu) {
       return;
     }
+    if (confirmation) return;
 
     return setActionMenuOpen(newState);
   }
@@ -254,13 +366,14 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
           "max-md:h-full max-md:rounded-none max-h-screen",
           "md:border border-border",
           "flex flex-col",
-          "backdrop-blur-[70px]",
+          "backdrop-blur-[80px]",
           "bg-gradient-to-b from-background to-backgroundSecondary"
         )}
         loop
         vimBindings={false}
         {...extraCommandProps}
       >
+        {confirmation && <SpotterConfirmation {...confirmation} setConfirmation={setConfirmation} />}
         <div className="flex flex-col h-full max-h-screen">
           <SpotterHeader canGoBack={canGoBack} header={header} hasOuterBody={!!outerBody} />
           {!outerBody && <HorizontalSectionSeperator isLoading={isLoading} />}

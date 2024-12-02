@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  assetPrefix: ".",
+const isDev = process.env.NODE_ENV === "development";
 
+const nextConfig: NextConfig = {
   output: "export",
   images: {
     unoptimized: true
@@ -11,5 +11,9 @@ const nextConfig: NextConfig = {
     reactCompiler: true
   }
 };
+
+if (!isDev) {
+  nextConfig.assetPrefix = ".";
+}
 
 export default nextConfig;

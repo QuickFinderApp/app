@@ -36,6 +36,17 @@ export function quitApp() {
   return spotter.quit();
 }
 
+export function hideSpotter() {
+  return spotter.hide();
+}
+export function showSpotter() {
+  return spotter.show();
+}
+
 export function confetti() {
   return spotter.launchConfetti();
+}
+
+export function runSystemAction(action: string) {
+  return spotter.runSystemAction(action);
 }

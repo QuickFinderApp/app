@@ -8,7 +8,6 @@ export function HorizontalSectionSeperator({ isLoading }: SectionSeperatorProps)
   return (
     <div className="relative">
       <div className={cn(isLoading && "animate-[pulse_1s_infinite]", "w-full h-[2px] bg-border-soft")} />
-      {false && isLoading && <div className="absolute w-full h-0.5 bg-loader animate-[pulse_1s_infinite]" />}
 
       {isLoading && (
         <div

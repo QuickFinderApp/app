@@ -215,7 +215,7 @@ export function useActionMenu(
                   <Separator />
                   <Command.Input
                     placeholder="Search for action..."
-                    className="bg-transparent mx-4 my-1.5 outline-none border-none focus:ring-0 focus:outline-none"
+                    className="bg-transparent mx-4 my-1.5 outline-none border-none focus:ring-0 focus:outline-none placeholder:text-text-400"
                   />
                 </Command>
               </motion.div>

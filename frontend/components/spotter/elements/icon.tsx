@@ -46,7 +46,7 @@ export const Icon = React.memo(function Icon({ src, width = 24, height = 24, cla
         );
       } else {
         // Local asset case
-        const assetPath = src.startsWith("/") ? src : `../assets/${src}`;
+        const assetPath = src.startsWith("/") ? src : `./assets/${src}`;
         return (
           <div className={cn(className, "overflow-hidden")}>
             <Image src={assetPath} className="object-contain" alt="Icon" width={widthPixels} height={heightPixels} />

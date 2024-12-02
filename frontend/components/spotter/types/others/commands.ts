@@ -11,6 +11,8 @@ export type SpotterCommand = {
   extensionIcon?: IconSource;
 
   filePath?: string;
+  webLink?: string;
+
   execute?: (context: ActionContext) => Promise<void> | void;
   render?: (context: ActionContext) => JSX.Element;
 } & SpotterListItem;
