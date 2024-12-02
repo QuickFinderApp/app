@@ -35,8 +35,11 @@ export const createOverlayWindow = (): void => {
     frame: false,
     resizable: false,
     alwaysOnTop: true,
-    show: false
+    show: false,
+    skipTaskbar: true // on Windows
   });
+
+  window.setHiddenInMissionControl(true);
 
   // Load the page
   window.loadURL(OVERLAY_WINDOW_WEBPACK_ENTRY);

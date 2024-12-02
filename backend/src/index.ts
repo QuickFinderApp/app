@@ -45,7 +45,8 @@ const createSpotterWindow = (): void => {
     resizable: false,
     show: false,
     vibrancy: "fullscreen-ui", // on MacOS
-    backgroundMaterial: "acrylic" // on Windows 11
+    backgroundMaterial: "acrylic", // on Windows
+    skipTaskbar: true // on Windows
   });
 
   // Load the page
