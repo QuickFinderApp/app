@@ -9,6 +9,9 @@ export default async function SleepComputer() {
     case "darwin": // macOS
       command = `osascript -e 'tell app "System Events" to sleep'`;
       break;
+    case "linux": // Linux
+      command = `systemctl suspend`;
+      break;
     default:
       console.error("Unsupported platform");
       return false; // Exit if unsupported platform

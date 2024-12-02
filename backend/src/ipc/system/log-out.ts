@@ -9,6 +9,9 @@ export default async function LogOutComputer() {
     case "darwin": // macOS
       command = `osascript -e 'tell app "System Events" to log out'`;
       break;
+    case "linux": // Linux
+      command = `pkill -KILL -u "$(whoami)"`;
+      break;
     default:
       console.error("Unsupported platform");
       return false; // Exit if unsupported platform

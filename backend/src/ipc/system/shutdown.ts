@@ -13,7 +13,7 @@ export default async function ShutdownComputer() {
       command = `osascript -e 'tell app "System Events" to shut down'`;
       break;
     case "linux": // Linux
-      command = "shutdown now";
+      command = "shutdown -h now";
       break;
     default:
       console.error("Unsupported platform");
