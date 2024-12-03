@@ -1,6 +1,7 @@
 // Manage windows orchastration (is that the right word?)
 
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, nativeImage } from "electron";
+import path from "path";
 
 export type WindowType = {
   window: BrowserWindow;
@@ -40,6 +41,11 @@ export function registerWindow(windowId: string, windowData: WindowType): boolea
     console.warn(`Window with ID ${windowId} already exists.`);
     return false;
   }
+
+  if (process.platform == "linux" && windowData.window) {
+    windowData.window.setIcon(nativeImage.createFromPath(path.join(__dirname, "assets", "icon-rounded.png")));
+  }
+
   windowsManager.set(windowId, {
     ...windowData,
     show: () => {

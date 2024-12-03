@@ -45,8 +45,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir -p distributables/deb distributables/rpm
-          cp ./backend/out/make/deb/**/*.deb distributables/deb/
-          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/
+          cp ./backend/out/make/deb/**/*.deb distributables/deb/quick-finder-amd64.deb
+          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/quick-finder-x86_64.rpm
           cd distributables
           zip -r quickfinder-linux.zip *
           cd ..
@@ -95,15 +95,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Asset (Ubuntu)
+      - name: Upload Release Asset (Ubuntu - deb)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/quickfinder-linux.zip
-          asset_name: quickfinder-linux.zip
-          asset_content_type: application/zip
+          asset_path: ./artifacts/build-ubuntu-latest/deb/quick-finder-amd64.deb
+          asset_name: quick-finder-amd64.deb
+          asset_content_type: application/vnd.debian.binary-package
+
+      - name: Upload Release Asset (Ubuntu - rpm)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/build-ubuntu-latest/rpm/quick-finder-x86_64.rpm
+          asset_name: quick-finder-x86_64.rpm
+          asset_content_type: application/x-rpm
 
       - name: Upload Release Asset (macOS)
         uses: actions/upload-release-asset@v1

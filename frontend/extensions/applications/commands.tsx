@@ -42,7 +42,7 @@ export function useApplicationCommands() {
         ...extensionInfo,
 
         icon: app.icon || "FileQuestion",
-        id: app.name,
+        id: app.path,
         title: app.name,
         filePath: app.path,
         type: "Application",

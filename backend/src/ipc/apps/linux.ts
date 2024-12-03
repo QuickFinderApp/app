@@ -1,4 +1,5 @@
-import fs from "fs/promises";
+import fs from "fs";
+import fsPromises from "fs/promises";
 import path from "path";
 import { exec } from "child_process";
 import util from "util";
@@ -8,7 +9,7 @@ const execAsync = util.promisify(exec);
 
 async function parseDesktopFile(filePath: string): Promise<{ name: string; icon: string; path: string } | null> {
   try {
-    const content = await fs.readFile(filePath, "utf-8");
+    const content = await fsPromises.readFile(filePath, "utf-8");
     const lines = content.split("\n");
     let name = "";
     let icon = "";
@@ -47,8 +48,12 @@ async function getIconPath(iconName: string): Promise<string> {
 async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: string; icon: string; path: string }[]> {
   const apps: { name: string; icon: string; path: string }[] = [];
 
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
+
   try {
-    const files = await fs.readdir(dir);
+    const files = await fsPromises.readdir(dir);
     for (const file of files) {
       if (file.endsWith(".desktop")) {
         const filePath = path.join(dir, file);
