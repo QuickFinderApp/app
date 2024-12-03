@@ -76,7 +76,7 @@ export async function getLinuxApplications(): Promise<{ name: string; icon: stri
   const applications: { name: string; icon: string; path: string }[] = [];
 
   const promises = directories.map(async (dir) => {
-    const appsFound = await getLinuxApplicationsInDirectory(dir);
+    const appsFound = await getLinuxApplicationsInDirectory(dir).catch(() => []);
     applications.push(...appsFound);
   });
 

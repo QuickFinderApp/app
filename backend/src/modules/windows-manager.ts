@@ -15,15 +15,18 @@ function WindowsChanged() {
   const windows = Array.from(windowsManager.values());
   const windowCount = windows.length;
 
-  if (windowCount === 0) {
-    app.dock.hide();
-  } else {
-    const hasDockIcon = windows.every((window) => !window.hiddenFromDock);
-
-    if (hasDockIcon) {
-      app.dock.show();
-    } else {
+  // macOS only: hide on dock
+  if (process.platform == "darwin") {
+    if (windowCount === 0) {
       app.dock.hide();
+    } else {
+      const hasDockIcon = windows.every((window) => !window.hiddenFromDock);
+
+      if (hasDockIcon) {
+        app.dock.show();
+      } else {
+        app.dock.hide();
+      }
     }
   }
 }
