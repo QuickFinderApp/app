@@ -1,14 +1,9 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import { getFocusedDisplayBounds } from "../../utils";
+import { getFocusedDisplayBounds, WindowType } from "../../utils";
 
 declare const OVERLAY_WINDOW_WEBPACK_ENTRY: string;
 declare const OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-type WindowType = {
-  window: BrowserWindow;
-  show: () => void;
-  hide: () => void;
-};
 let overlayWindow: WindowType | null = null;
 
 export const createOverlayWindow = (): void => {

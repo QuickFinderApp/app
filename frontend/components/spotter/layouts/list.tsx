@@ -212,7 +212,7 @@ function Header({
         onValueChange={onQueryChange}
         placeholder={searchBarPlaceholder}
         autoFocus
-        className="blacklistDrag flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-text-600 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-gray-400"
+        className="blacklistDrag flex h-7 w-full rounded-md bg-transparent text-sm outline-none placeholder:text-text-600 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-gray-400"
       />
 
       {/* Arguments */}

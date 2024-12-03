@@ -5,9 +5,9 @@
   "description": "Quickly search files, applications, and run commands!",
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
+    "start": "export NODE_ENV=development && electron-forge start",
+    "package": "export NODE_ENV=production && electron-forge package",
+    "make": "export NODE_ENV=production && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },

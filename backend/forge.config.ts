@@ -15,13 +15,15 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
-const REGENERATE_FRONTEND = true;
+const DEV_REGENERATE_FRONTEND = true;
+const REGENERATE_FRONTEND = (process.env.NODE_ENV == "production" && true) || DEV_REGENERATE_FRONTEND;
 
 const config: ForgeConfig = {
   packagerConfig: {
     executableName: "quick-finder",
     asar: true,
-    icon: "icons/macos/AppIcon.icns"
+    icon: "icons/macos/AppIcon.icns",
+    appBundleId: "dev.iamevan.quickfinder"
   },
   rebuildConfig: {},
   makers: [
@@ -56,9 +58,9 @@ const config: ForgeConfig = {
           {
             name: "main_window",
             html: "./src/out/spotter.html",
-            js: "./src/renderer.ts",
+            js: "./src/windows/spotter/renderer.ts",
             preload: {
-              js: "./src/preload.ts"
+              js: "./src/windows/spotter/preload.ts"
             }
           },
           {

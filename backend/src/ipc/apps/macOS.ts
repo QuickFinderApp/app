@@ -9,7 +9,7 @@ async function getFileIcon(path: string): Promise<string | null> {
     const base64 = `data:image/png;base64,${pngBuffer.toString("base64")}`;
     return base64;
   } catch (err) {
-    console.error("Failed to get icon:", err);
+    console.log("Failed to get icon:", err.message);
     return null;
   }
 }

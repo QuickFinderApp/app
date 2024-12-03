@@ -1,14 +1,11 @@
 import process from "node:process";
 import path from "node:path";
 import { promisify } from "node:util";
-import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import pMap from "p-map";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const execFileP = promisify(execFile);
-const binary = path.join(__dirname, "file-icon");
+const binary = path.join(__dirname, "assets", "binaries", "file-icon");
 const HUNDRED_MEGABYTES = 1024 * 1024 * 100;
 
 const spawnOptions = {
