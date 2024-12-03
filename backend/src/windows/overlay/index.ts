@@ -1,14 +1,21 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import { getFocusedDisplayBounds, WindowType } from "../../utils";
+import { getFocusedDisplayBounds } from "../../modules/utils";
+import { createWindowManager } from "../../modules/windows-manager";
 
 declare const OVERLAY_WINDOW_WEBPACK_ENTRY: string;
 declare const OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-let overlayWindow: WindowType | null = null;
+const WINDOW_ID = "overlay";
+const {
+  getWindow: getOverlayWindow,
+  setWindow: setOverlayWindow,
+  removeWindow: removeOverlayWindow
+} = createWindowManager(WINDOW_ID);
 
 export const createOverlayWindow = (): void => {
-  if (overlayWindow) {
-    overlayWindow.show();
+  const windowData = getOverlayWindow();
+  if (windowData) {
+    windowData.show();
     return;
   }
 
@@ -17,6 +24,7 @@ export const createOverlayWindow = (): void => {
   const devMode = !packaged;
 
   const window = new BrowserWindow({
+    title: "Overlay",
     height: 500,
     width: 800,
     webPreferences: {
@@ -58,19 +66,22 @@ export const createOverlayWindow = (): void => {
     window.focus();
   }
 
-  // Set shortcut
+  // Listen for close
+  window.on("closed", () => {
+    removeOverlayWindow();
+  });
+
   showOverlayWindow();
 
-  overlayWindow = {
+  setOverlayWindow({
     window: window,
     show: showOverlayWindow,
-    hide: hideOverlayWindow
-  };
+    hide: hideOverlayWindow,
+    hiddenFromDock: true
+  });
 };
 
 ipcMain.handle("launch-confetti", () => {
   createOverlayWindow();
-  if (overlayWindow) {
-    overlayWindow.window.webContents.send("launch-confetti");
-  }
+  getOverlayWindow()?.window.webContents.send("launch-confetti");
 });

@@ -26,3 +26,14 @@ app.on("activate", () => {
 app.on("window-all-closed", function () {
   /* surprise: nothing! */
 });
+
+// single instance only
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    // Someone tried to run a second instance, we should focus our window.
+    createSpotterWindow();
+  });
+}

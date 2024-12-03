@@ -1,10 +1,4 @@
-import { BrowserWindow, screen } from "electron";
-
-export type WindowType = {
-  window: BrowserWindow;
-  show: () => void;
-  hide: () => void;
-};
+import { screen } from "electron";
 
 export function getFocusedDisplay() {
   const point = screen.getCursorScreenPoint();
