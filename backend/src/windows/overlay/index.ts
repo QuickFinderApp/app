@@ -42,7 +42,9 @@ export const createOverlayWindow = (): void => {
     skipTaskbar: true // on Windows
   });
 
-  window.setHiddenInMissionControl(true);
+  if (process.platform == "darwin") {
+    window.setHiddenInMissionControl(true);
+  }
 
   // Load the page
   window.loadURL(OVERLAY_WINDOW_WEBPACK_ENTRY);
