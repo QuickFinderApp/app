@@ -7,6 +7,7 @@ import fs from "fs";
 import CopyPlugin from "copy-webpack-plugin";
 import path from "path";
 
+// This adds back executable permissions to the binaries, as permissions are lost when copying files with copy-webpack-plugin.
 class PermissionsPlugin {
   apply(compiler: Compiler) {
     compiler.hooks.afterEmit.tap("PermissionsPlugin", () => {
@@ -64,5 +65,5 @@ export const mainConfig: Configuration = {
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"]
   },
-  devtool: process.env.NODE_ENV === "production" ? false : "eval"
+  devtool: process.env.BUILD_ENV === "production" ? false : "eval"
 };

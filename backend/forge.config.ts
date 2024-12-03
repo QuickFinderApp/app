@@ -16,7 +16,10 @@ import path from "path";
 import { execSync } from "child_process";
 
 const DEV_REGENERATE_FRONTEND = true;
-const REGENERATE_FRONTEND = (process.env.NODE_ENV == "production" && true) || DEV_REGENERATE_FRONTEND;
+let REGENERATE_FRONTEND = DEV_REGENERATE_FRONTEND;
+if (process.env.BUILD_ENV == "production") {
+  REGENERATE_FRONTEND = true;
+}
 
 const config: ForgeConfig = {
   packagerConfig: {
