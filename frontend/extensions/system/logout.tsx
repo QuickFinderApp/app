@@ -8,7 +8,7 @@ async function execute() {
 
 export const LogoutCommand: SpotterCommand = {
   icon: "DoorOpen",
-  id: "Logout",
+  id: "logout",
   title: "Logout",
   type: "Command",
   execute

@@ -2,6 +2,7 @@ import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } 
 import { getFocusedDisplayBounds } from "../../modules/utils";
 import path from "path";
 import { createWindowManager } from "../../modules/windows-manager";
+import { IS_DEV_MODE } from "../../config";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -21,9 +22,6 @@ export const createSpotterWindow = (): void => {
   }
 
   // Create the browser window.
-  const packaged = app.isPackaged;
-  const devMode = !packaged;
-
   const mainWindow = new BrowserWindow({
     title: "Spotter",
     height: 482,
@@ -31,7 +29,7 @@ export const createSpotterWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       webSecurity: false,
-      devTools: devMode
+      devTools: IS_DEV_MODE
     },
     movable: true,
     transparent: true,
@@ -47,7 +45,7 @@ export const createSpotterWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  if (devMode) {
+  if (IS_DEV_MODE) {
     mainWindow.webContents.openDevTools({
       mode: "detach"
     });

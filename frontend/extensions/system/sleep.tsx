@@ -8,7 +8,7 @@ async function execute() {
 
 export const SleepCommand: SpotterCommand = {
   icon: "Moon",
-  id: "Sleep",
+  id: "sleep",
   title: "Sleep",
   type: "Command",
   execute

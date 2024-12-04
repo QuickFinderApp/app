@@ -11,7 +11,7 @@ import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
 import { useApplicationCommands } from "@/extensions/applications/commands";
 import { openFileLocation, openLink } from "@/lib/utils";
-import { trackEvent } from "@/lib/umami";
+import { trackEvent } from "@/lib/umami/umami";
 
 function getActionText(commandType: SpotterCommandType): string {
   if (commandType == "Application") {
@@ -36,7 +36,6 @@ export default function SpotterHome() {
       extensionId: command.extensionId,
       commandId: command.id
     };
-    trackEvent("run_command", trackEventPayload);
 
     if (command.execute) {
       trackEvent("execute_command_callback", trackEventPayload);

@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { getFocusedDisplayBounds } from "../../modules/utils";
 import { createWindowManager } from "../../modules/windows-manager";
+import { IS_DEV_MODE } from "../../config";
 
 declare const OVERLAY_WINDOW_WEBPACK_ENTRY: string;
 declare const OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -20,9 +21,6 @@ export const createOverlayWindow = (): void => {
   }
 
   // Create the browser window.
-  const packaged = app.isPackaged;
-  const devMode = !packaged;
-
   const window = new BrowserWindow({
     title: "Overlay",
     height: 500,
@@ -30,7 +28,7 @@ export const createOverlayWindow = (): void => {
     webPreferences: {
       preload: OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY,
       webSecurity: false,
-      devTools: devMode
+      devTools: IS_DEV_MODE
     },
     movable: true,
     transparent: true,
@@ -52,7 +50,7 @@ export const createOverlayWindow = (): void => {
   window.maximize();
 
   // Open the DevTools.
-  if (devMode) {
+  if (IS_DEV_MODE) {
     window.webContents.openDevTools({
       mode: "detach"
     });

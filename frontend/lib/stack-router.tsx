@@ -5,7 +5,7 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { XCircle } from "lucide-react";
-import { trackEvent } from "./umami";
+import { trackEvent } from "./umami/umami";
 
 // Define page configuration type
 export type PageConfig = {

@@ -24,7 +24,7 @@ async function execute() {
 
 export const ShutdownCommand: SpotterCommand = {
   icon: "Power",
-  id: "Shutdown",
+  id: "shutdown",
   title: "Shutdown",
   type: "Command",
   execute

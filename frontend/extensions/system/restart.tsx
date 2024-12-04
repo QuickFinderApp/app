@@ -24,7 +24,7 @@ async function execute() {
 
 export const RestartCommand: SpotterCommand = {
   icon: "Power",
-  id: "Restart",
+  id: "restart",
   title: "Restart",
   type: "Command",
   execute
