@@ -5,6 +5,7 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { XCircle } from "lucide-react";
+import { trackEvent } from "./umami";
 
 // Define page configuration type
 export type PageConfig = {
@@ -12,6 +13,7 @@ export type PageConfig = {
   component: React.ReactNode;
   props?: Record<string, unknown>;
   meta?: Record<string, unknown>;
+  sentAnalytics?: boolean;
 };
 
 // Enhanced router context type
@@ -52,7 +54,8 @@ const normalizePageInput = (page: PageConfig | React.ReactNode, customPageKey?: 
   if (React.isValidElement(page) || typeof page !== "object" || page === null) {
     return {
       key: customPageKey ?? Math.random().toString(36).slice(2, 11),
-      component: page
+      component: page,
+      sentAnalytics: false
     };
   }
   return page as PageConfig;
@@ -123,6 +126,17 @@ export function RouterProvider({ children, config }: RouterProviderProps) {
     prevStackLength.current = stack.length;
     onStackChange?.(stack);
   }
+
+  useEffect(() => {
+    stack.forEach((page) => {
+      if (page.sentAnalytics !== true) {
+        trackEvent("push_page_to_stack", {
+          pageKey: page.key
+        });
+        page.sentAnalytics = true;
+      }
+    });
+  }, [stack]);
 
   const contextValue = useMemo(
     () => ({

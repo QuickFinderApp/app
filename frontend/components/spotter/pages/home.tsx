@@ -11,6 +11,7 @@ import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
 import { useApplicationCommands } from "@/extensions/applications/commands";
 import { openFileLocation, openLink } from "@/lib/utils";
+import { trackEvent } from "@/lib/umami";
 
 function getActionText(commandType: SpotterCommandType): string {
   if (commandType == "Application") {
@@ -31,9 +32,19 @@ export default function SpotterHome() {
   const router = useRouter();
 
   function executeCommand(command: SpotterCommand, context: ActionContext) {
+    const trackEventPayload = {
+      extensionId: command.extensionId,
+      commandId: command.id
+    };
+    trackEvent("run_command", trackEventPayload);
+
     if (command.execute) {
+      trackEvent("execute_command_callback", trackEventPayload);
+
       command.execute(context);
     } else if (command.render) {
+      trackEvent("render_command_view", trackEventPayload);
+
       const RenderCommand = command.render;
       const result = <RenderCommand {...context} />;
       if (React.isValidElement(result)) {
