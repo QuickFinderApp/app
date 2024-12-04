@@ -1,48 +1,73 @@
 import fs from "fs";
 import fsPromises from "fs/promises";
 import path from "path";
+import os from "os";
 import { exec } from "child_process";
 import util from "util";
-import os from "os";
 
 const execAsync = util.promisify(exec);
 
-async function parseDesktopFile(filePath: string): Promise<{ name: string; icon: string; path: string } | null> {
+interface DesktopEntry {
+  Name?: string;
+  Icon?: string;
+  Exec?: string;
+  NoDisplay?: string;
+  Hidden?: string;
+}
+
+async function parseDesktopFile(filePath: string): Promise<DesktopEntry | null> {
   try {
     const content = await fsPromises.readFile(filePath, "utf-8");
     const lines = content.split("\n");
-    let name = "";
-    let icon = "";
-    let execPath = "";
+    const entry: DesktopEntry = {};
+    let inDesktopEntry = false;
 
     for (const line of lines) {
-      if (line.startsWith("Name=")) {
-        name = line.split("=")[1];
-      } else if (line.startsWith("Icon=")) {
-        icon = line.split("=")[1];
-      } else if (line.startsWith("Exec=")) {
-        execPath = line.split("=")[1].split(" ")[0];
+      if (line.trim() === "[Desktop Entry]") {
+        inDesktopEntry = true;
+        continue;
+      }
+      if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
+        inDesktopEntry = false;
+        continue;
+      }
+      if (!inDesktopEntry) continue;
+
+      const [key, ...valueParts] = line.split("=");
+      if (key && valueParts.length > 0) {
+        entry[key.trim() as keyof DesktopEntry] = valueParts.join("=").trim();
       }
     }
 
-    if (name && execPath) {
-      return { name, icon, path: execPath };
-    }
+    return entry;
   } catch (error) {
     console.error(`Error parsing desktop file ${filePath}:`, error);
+    return null;
   }
-
-  return null;
 }
 
-async function getIconPath(iconName: string): Promise<string> {
-  try {
-    const { stdout } = await execAsync(`find /usr/share/icons -name "${iconName}.*" | head -n 1`);
-    return stdout.trim();
-  } catch (error) {
-    console.error(`Error finding icon for ${iconName}:`, error);
-    return "";
+async function findIconPath(iconName: string): Promise<string> {
+  const iconDirs = [
+    "/usr/share/icons",
+    "/usr/share/pixmaps",
+    path.join(os.homedir(), ".icons"),
+    path.join(os.homedir(), ".local/share/icons"),
+  ];
+
+  for (const dir of iconDirs) {
+    try {
+      const { stdout } = await execAsync(`find "${dir}" -name "${iconName}.*" | head -n 1`);
+      const iconPath = stdout.trim();
+      if (iconPath) {
+        return iconPath;
+      }
+    } catch (error) {
+      // Ignore errors and continue searching
+    }
   }
+
+  // If no icon found, return the original name
+  return iconName;
 }
 
 async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: string; icon: string; path: string }[]> {
@@ -57,10 +82,15 @@ async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: str
     for (const file of files) {
       if (file.endsWith(".desktop")) {
         const filePath = path.join(dir, file);
-        const app = await parseDesktopFile(filePath);
-        if (app) {
-          const iconPath = await getIconPath(app.icon);
-          apps.push({ ...app, icon: iconPath });
+        const entry = await parseDesktopFile(filePath);
+        if (entry && entry.Name && entry.Exec && entry.NoDisplay !== "true" && entry.Hidden !== "true") {
+          const execCommand = entry.Exec.split(" ").filter(part => !part.startsWith("%"));
+          const iconPath = entry.Icon ? await findIconPath(entry.Icon) : "";
+          apps.push({ 
+            name: entry.Name, 
+            icon: iconPath, 
+            path: execCommand.join(" ")
+          });
         }
       }
     }
@@ -72,10 +102,17 @@ async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: str
 }
 
 export async function getLinuxApplications(): Promise<{ name: string; icon: string; path: string }[]> {
+  const dataHome = process.env.XDG_DATA_HOME || path.join(os.homedir(), ".local", "share");
+  const extraDataDirs = process.env.XDG_DATA_DIRS
+    ? process.env.XDG_DATA_DIRS.split(":")
+    : ["/usr/local/share", "/usr/share", "/var/lib/flatpak/exports/share"];
+
+  const flatpakDir = path.join(dataHome, "flatpak", "exports", "share");
+  
   const directories = [
-    "/usr/share/applications",
-    "/usr/local/share/applications",
-    path.join(os.homedir(), ".local/share/applications")
+    path.join(dataHome, "applications"),
+    path.join(flatpakDir, "applications"),
+    ...extraDataDirs.map(dir => path.join(dir, "applications"))
   ];
 
   const applications: { name: string; icon: string; path: string }[] = [];
