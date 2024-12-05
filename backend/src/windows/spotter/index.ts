@@ -51,6 +51,7 @@ export const createSpotterWindow = (): void => {
     },
     movable: true,
     transparent: true,
+    backgroundColor: "#00FFFFFF",
     frame: false,
     resizable: false,
     show: false,

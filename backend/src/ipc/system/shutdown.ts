@@ -1,7 +1,7 @@
-import { execSync } from "child_process";
+import { exec } from "child_process";
 import os from "os";
 
-export default async function ShutdownComputer() {
+export default function ShutdownComputer(): Promise<boolean> {
   let command;
 
   // Determine platform and set the appropriate command
@@ -17,14 +17,17 @@ export default async function ShutdownComputer() {
       break;
     default:
       console.error("Unsupported platform");
-      return false; // Exit if unsupported platform
+      return Promise.resolve(false); // Exit if unsupported platform
   }
 
   // Execute the command
-  try {
-    execSync(command);
-    return true;
-  } catch {
-    return false;
-  }
+  return new Promise((resolve) => {
+    exec(command, (error) => {
+      if (error) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
 }
