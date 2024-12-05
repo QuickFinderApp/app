@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.6.0",
+    "@electron-forge/maker-dmg": "^7.6.0",
     "@electron-forge/maker-deb": "^7.6.0",
     "@electron-forge/maker-rpm": "^7.6.0",
     "@electron-forge/maker-squirrel": "^7.6.0",
@@ -44,7 +45,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@electron-forge/maker-dmg": "^7.6.0",
     "@expo/plist": "^0.2.0",
     "electron-squirrel-startup": "^1.0.1"
   }

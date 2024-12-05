@@ -11,38 +11,28 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
 
-import fs, { existsSync, readFileSync } from "fs";
+import fs, { readFileSync } from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
-let appVersion = "dev";
-let buildVersion = "dev";
+let appVersion = "1.0.0";
+let buildVersion = "1.0.0";
 
 const DEV_REGENERATE_FRONTEND = true;
 let REGENERATE_FRONTEND = DEV_REGENERATE_FRONTEND;
 if (process.env.BUILD_ENV == "production") {
   REGENERATE_FRONTEND = true;
+}
 
-  try {
-    const packageContent = readFileSync("../package.json", "utf8");
-    const packageJSON = JSON.parse(packageContent);
-    if (packageJSON.version) {
-      appVersion = packageJSON.version;
-    }
-  } catch {
-    /* empty */
+try {
+  const packageContent = readFileSync("../package.json", "utf8");
+  const packageJSON = JSON.parse(packageContent);
+  if (packageJSON.version) {
+    appVersion = packageJSON.version;
+    buildVersion = packageJSON.version;
   }
-
-  try {
-    const gitDir = path.resolve(__dirname, "../.git");
-    if (existsSync(gitDir)) {
-      buildVersion = execSync("git rev-parse --short HEAD", { cwd: path.dirname(gitDir) })
-        .toString()
-        .trim();
-    }
-  } catch {
-    /* empty */
-  }
+} catch {
+  /* empty */
 }
 
 console.log("App Version:", appVersion);
