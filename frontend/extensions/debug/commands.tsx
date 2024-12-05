@@ -5,7 +5,7 @@ import { Roblox } from "./roblox";
 import { dictionary } from "./dictionary";
 import themes from "./test-themes";
 
-const debug = true;
+const debug = false;
 
 const initialCommands = [v0, Roblox, dictionary, ...themes];
 const commands = initialCommands
