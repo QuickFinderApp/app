@@ -281,12 +281,6 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'Build Failed. Please check the [build logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.'
-            })
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
 
@@ -299,6 +293,12 @@ jobs:
                 owner,
                 repo,
                 issue_number,
+                body: 'Build Failed. Please check the [build logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
+
       - name: Comment PR (Success)
         uses: actions/github-script@v6
         if: steps.check_status.outputs.status == 'success'
