@@ -194,12 +194,11 @@ jobs:
     steps:
       - name: Get PR SHA
         id: get_pr_sha
+        shell: pwsh
         run: |
-          PR_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
-          PR_SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
-            jq -r .head.sha)
-          echo "pr_sha=${PR_SHA}" >> $GITHUB_OUTPUT
+          $PR_NUMBER = (Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json).issue.number
+          $PR_SHA = (Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" -Headers @{Authorization = "token ${{ secrets.GITHUB_TOKEN }}"}).head.sha
+          echo "pr_sha=${PR_SHA}" >> $env:GITHUB_OUTPUT
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -233,7 +232,7 @@ jobs:
         run: |
           mkdir distributables
           cd ./backend/out/make
-          powershell Compress-Archive -Path * -DestinationPath ../../../distributables/quickfinder-windows.zip
+          Compress-Archive -Path * -DestinationPath ../../../distributables/quickfinder-windows.zip
           cd ../../..
 
       - name: Upload the build artifacts
