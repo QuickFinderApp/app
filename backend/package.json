@@ -5,9 +5,9 @@
   "description": "Quickly search files, applications, and run commands!",
   "main": ".webpack/main",
   "scripts": {
-    "start": "export BUILD_ENV=development && electron-forge start",
-    "package": "export BUILD_ENV=production && electron-forge package",
-    "make": "export BUILD_ENV=production && electron-forge make",
+    "start": "cross-env BUILD_ENV=development electron-forge start",
+    "package": "cross-env BUILD_ENV=production electron-forge package",
+    "make": "cross-env BUILD_ENV=production electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -25,6 +25,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "copy-webpack-plugin": "^12.0.2",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.11.0",
     "electron": "33.2.1",
     "eslint": "^8.57.1",
