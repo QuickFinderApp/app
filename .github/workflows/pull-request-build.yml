@@ -32,10 +32,19 @@ jobs:
     if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-linux == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Get PR SHA
+        id: get_pr_sha
+        run: |
+          PR_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+          PR_SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
+            jq -r .head.sha)
+          echo "pr_sha=${PR_SHA}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ steps.get_pr_sha.outputs.pr_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -104,10 +113,19 @@ jobs:
     if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-mac == 'true'
     runs-on: macos-latest
     steps:
+      - name: Get PR SHA
+        id: get_pr_sha
+        run: |
+          PR_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+          PR_SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
+            jq -r .head.sha)
+          echo "pr_sha=${PR_SHA}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ steps.get_pr_sha.outputs.pr_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -174,10 +192,19 @@ jobs:
     if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-win == 'true'
     runs-on: windows-latest
     steps:
+      - name: Get PR SHA
+        id: get_pr_sha
+        run: |
+          PR_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+          PR_SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
+            jq -r .head.sha)
+          echo "pr_sha=${PR_SHA}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ steps.get_pr_sha.outputs.pr_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
