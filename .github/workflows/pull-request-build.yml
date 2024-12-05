@@ -22,10 +22,10 @@ jobs:
         id: check
         run: |
           PR_COMMENT="${{ github.event.comment.body }}"
-          echo "build=$(echo "$PR_COMMENT" | grep -q '!build' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-linux=$(echo "$PR_COMMENT" | grep -q '!build-linux' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-mac=$(echo "$PR_COMMENT" | grep -q '!build-mac' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-win=$(echo "$PR_COMMENT" | grep -q '!build-win' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build=$(echo "$PR_COMMENT" | grep -q '^!build$' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-linux=$(echo "$PR_COMMENT" | grep -q '^!build-linux$' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-mac=$(echo "$PR_COMMENT" | grep -q '^!build-mac$' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-win=$(echo "$PR_COMMENT" | grep -q '^!build-win$' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
 
   build-linux:
     needs: check-command
@@ -79,12 +79,23 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'Linux build successful! [Download Linux build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-            })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: 'Linux build successful! [Download Linux build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
 
   build-mac:
     needs: check-command
@@ -136,12 +147,23 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'macOS build successful! [Download macOS build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-            })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: 'macOS build successful! [Download macOS build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
 
   build-win:
     needs: check-command
@@ -193,12 +215,23 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'Windows build successful! [Download Windows build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-            })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: 'Windows build successful! [Download Windows build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
 
   notify-build-start:
     runs-on: ubuntu-latest
@@ -210,12 +243,23 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'Building...'
-            })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: 'Building...'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
 
   notify-build-result:
     runs-on: ubuntu-latest
@@ -243,16 +287,39 @@ jobs:
               repo: context.repo.name,
               body: 'Build Failed. Please check the [build logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.'
             })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
 
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
       - name: Comment PR (Success)
         uses: actions/github-script@v6
         if: steps.check_status.outputs.status == 'success'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: 'Build Successful! You can download the builds from the links provided in the previous comments.'
-            })
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            if (!issue_number) {
+              console.log('No issue number found. This may be a push event rather than a pull request.');
+              return;
+            }
+
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: 'Build Successful! You can download the builds from the links provided in the previous comments.'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
