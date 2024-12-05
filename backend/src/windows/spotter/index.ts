@@ -120,12 +120,6 @@ ipcMain.handle("hide-spotter", () => getSpotterWindow()?.hide());
 ipcMain.handle("get-hide-spotter-on-focus-lost", () => USER_HIDE_ON_FOCUS_LOST);
 ipcMain.handle("set-hide-spotter-on-focus-lost", (event, bool: boolean) => {
   setUserHideOnFocusLost(bool);
-
-  // if (HIDE_ON_FOCUS_LOST) {
-  //   getSpotterWindow()?.window.setAlwaysOnTop(false);
-  // } else {
-  //   getSpotterWindow()?.window.setAlwaysOnTop(true);
-  // }
 });
 
 app.on("ready", () => {

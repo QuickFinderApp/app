@@ -1,0 +1,254 @@
+name: Build Preview App for Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions: write-all
+
+jobs:
+  check-command:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.check.outputs.build }}
+      build-linux: ${{ steps.check.outputs.build-linux }}
+      build-mac: ${{ steps.check.outputs.build-mac }}
+      build-win: ${{ steps.check.outputs.build-win }}
+    steps:
+      - name: Check PR description
+        id: check
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          echo "build=$(echo "$PR_BODY" | grep -q '!build' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-linux=$(echo "$PR_BODY" | grep -q '!build-linux' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-mac=$(echo "$PR_BODY" | grep -q '!build-mac' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-win=$(echo "$PR_BODY" | grep -q '!build-win' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+  build-linux:
+    needs: check-command
+    if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-linux == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install frontend dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: ./frontend
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Package and Build the Electron app
+        run: |
+          npm run make
+        working-directory: ./backend
+
+      - name: Archive the build
+        run: |
+          mkdir -p distributables/deb distributables/rpm
+          cp ./backend/out/make/deb/**/*.deb distributables/deb/quick-finder-amd64.deb
+          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/quick-finder-x86_64.rpm
+          cd distributables
+          zip -r quickfinder-linux.zip *
+          cd ..
+
+      - name: Upload the build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-linux
+          path: distributables/*
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'Linux build successful! [Download Linux build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
+
+  build-mac:
+    needs: check-command
+    if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-mac == 'true'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install frontend dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: ./frontend
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Package and Build the Electron app
+        run: |
+          npm run make
+        working-directory: ./backend
+
+      - name: Collect built distributables
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          cp *.dmg ../../../distributables/QuickFinder.dmg
+          cd ../../..
+
+      - name: Upload the build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-mac
+          path: distributables/*
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'macOS build successful! [Download macOS build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
+
+  build-win:
+    needs: check-command
+    if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-win == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install frontend dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: ./frontend
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Package and Build the Electron app
+        run: |
+          npm run make
+        working-directory: ./backend
+
+      - name: Archive the build
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          powershell Compress-Archive -Path * -DestinationPath ../../../distributables/quickfinder-windows.zip
+          cd ../../..
+
+      - name: Upload the build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-windows
+          path: distributables/*
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'Windows build successful! [Download Windows build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
+
+  notify-build-start:
+    runs-on: ubuntu-latest
+    needs: check-command
+    if: needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-linux == 'true' || needs.check-command.outputs.build-mac == 'true' || needs.check-command.outputs.build-win == 'true'
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'Building...'
+            })
+
+  notify-build-result:
+    runs-on: ubuntu-latest
+    needs: [check-command, build-linux, build-mac, build-win]
+    if: always() && (needs.check-command.outputs.build == 'true' || needs.check-command.outputs.build-linux == 'true' || needs.check-command.outputs.build-mac == 'true' || needs.check-command.outputs.build-win == 'true')
+    steps:
+      - name: Check build status
+        id: check_status
+        run: |
+          if [[ "${{ needs.build-linux.result }}" == "failure" || "${{ needs.build-mac.result }}" == "failure" || "${{ needs.build-win.result }}" == "failure" ]]; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR (Failure)
+        uses: actions/github-script@v6
+        if: steps.check_status.outputs.status == 'failure'
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'Build Failed. Please check the [build logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.'
+            })
+
+      - name: Comment PR (Success)
+        uses: actions/github-script@v6
+        if: steps.check_status.outputs.status == 'success'
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: 'Build Successful! You can download the builds from the links provided in the previous comments.'
+            })

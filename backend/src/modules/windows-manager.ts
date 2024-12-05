@@ -24,10 +24,41 @@ function WindowsChanged() {
     } else {
       const hasDockIcon = windows.every((window) => !window.hiddenFromDock);
 
+      let hideDockIcon: boolean | null = null;
+
+      const activeWindows = windows
+        .map((window) => {
+          if (window.window.isVisible()) {
+            return {
+              window,
+              isFocused: window.window.isFocused()
+            };
+          }
+          return null;
+        })
+        .filter((window) => window != null);
+
       if (hasDockIcon) {
-        app.dock.show();
+        if (!app.dock.isVisible()) {
+          hideDockIcon = false;
+        }
       } else {
+        if (app.dock.isVisible()) {
+          hideDockIcon = true;
+        }
+      }
+
+      if (hideDockIcon == true) {
         app.dock.hide();
+
+        setTimeout(() => {
+          activeWindows.forEach(({ window }) => {
+            window.window.restore();
+            window.window.focus();
+          });
+        }, 200);
+      } else if (hideDockIcon == false) {
+        app.dock.show();
       }
     }
   }
@@ -54,12 +85,12 @@ export function registerWindow(windowId: string, windowData: WindowType): boolea
   windowsManager.set(windowId, {
     ...windowData,
     show: () => {
-      WindowsChanged();
       windowData.show();
+      WindowsChanged();
     },
     hide: () => {
-      WindowsChanged();
       windowData.hide();
+      WindowsChanged();
     }
   });
   WindowsChanged();
