@@ -56,9 +56,14 @@ export const createSpotterWindow = (): void => {
     show: false,
     alwaysOnTop: true,
     vibrancy: "fullscreen-ui", // on MacOS
-    backgroundMaterial: "acrylic", // on Windows
-    skipTaskbar: true // on Windows
+    backgroundMaterial: "acrylic" // on Windows
   });
+
+  if (process.platform == "darwin") {
+    mainWindow.setSkipTaskbar(true);
+  } else if (process.platform == "win32") {
+    mainWindow.setSkipTaskbar(true);
+  }
 
   // Load the page
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);

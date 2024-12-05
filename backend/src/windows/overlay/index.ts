@@ -35,13 +35,13 @@ export const createOverlayWindow = (): void => {
     hasShadow: false,
     frame: false,
     resizable: false,
-    alwaysOnTop: true,
-    show: false,
-    skipTaskbar: true // on Windows
+    alwaysOnTop: true
   });
 
   if (process.platform == "darwin") {
     window.setHiddenInMissionControl(true);
+  } else if (process.platform == "win32") {
+    window.setSkipTaskbar(true);
   }
 
   // Load the page
@@ -63,7 +63,6 @@ export const createOverlayWindow = (): void => {
     const bounds = getFocusedDisplayBounds();
     window.setBounds(bounds);
     window.show();
-    window.focus();
   }
 
   // Listen for close
