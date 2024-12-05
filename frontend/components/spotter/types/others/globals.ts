@@ -20,6 +20,9 @@ declare global {
     launchConfetti: () => void;
 
     runSystemAction: (action: string) => Promise<boolean>;
+
+    getHideOnFocusLost: () => Promise<boolean>;
+    setHideOnFocusLost: (value: boolean) => Promise<void>;
   };
 
   const overlay: {

@@ -7,8 +7,8 @@ import { KeyComboHint, KeyName, useKeyCombo } from "@/lib/keyboard";
 import { useRouter } from "@/lib/stack-router";
 import { cn } from "@/lib/utils";
 import { Command } from "cmdk";
-import { Search } from "lucide-react";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { LockIcon, LockOpenIcon, Search } from "lucide-react";
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react";
 import { Separator } from "../../ui/separator";
 import { BackButton } from "../elements/back-button";
 import { HorizontalSectionSeperator } from "../elements/section-seperator";
@@ -132,13 +132,17 @@ function SpotterFooter({
   showActionMenu,
   toggleActionMenu,
   isActionMenuOpen,
-  runAction
+  runAction,
+  isSpotterFocusLocked,
+  setIsSpotterFocusLocked
 }: {
   primaryActions: SpotterAction[];
   showActionMenu: boolean;
   toggleActionMenu: () => void;
   isActionMenuOpen: boolean;
   runAction: ActionRunner;
+  isSpotterFocusLocked: boolean | null;
+  setIsSpotterFocusLocked: (locked: boolean) => void;
 }) {
   const actionMenuCombo = getActionMenuKeyCombo();
 
@@ -149,11 +153,27 @@ function SpotterFooter({
         "backdrop-blur-3xl bg-white/20 dark:bg-white/5"
       )}
     >
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center gap-1">
         <Button variant="ghost" className="px-2 gap-0" size="sm">
           <Search className="w-5 h-5 mr-1" />
           <div className="text-sm font-medium max-sm:hidden">QuickFinder</div>
         </Button>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className={cn("rounded-full w-10 h-10", isSpotterFocusLocked && "bg-red hover:bg-red-300")}
+                onClick={() => setIsSpotterFocusLocked(!isSpotterFocusLocked)}
+              >
+                {isSpotterFocusLocked && <LockIcon className="w-5 h-5" />}
+                {!isSpotterFocusLocked && <LockOpenIcon className="w-5 h-5" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className={cn("flex flex-row justify-center items-center gap-1")}>
+              Toggle Keep on Top
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className="flex items-center space-x-1">
         {primaryActions &&
@@ -289,6 +309,11 @@ function SpotterConfirmation({
   );
 }
 
+const MemoizedSpotterHeader = memo(SpotterHeader);
+const MemoizedSpotterBody = memo(SpotterBody);
+const MemoizedSpotterFooter = memo(SpotterFooter);
+const MemoizedSpotterConfirmation = memo(SpotterConfirmation);
+
 export function Spotter({ data: spotterData }: { data: SpotterData }) {
   const [confirmation, setConfirmation] = useState<ConfirmationData | null>(null);
 
@@ -356,6 +381,26 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
     runAction
   );
 
+  const [isSpotterFocusLocked, setIsSpotterFocusLocked] = useState<boolean | null>(null);
+  useEffect(() => {
+    let ended = false;
+
+    try {
+      if (isSpotterFocusLocked == null) {
+        spotter.getHideOnFocusLost().then((value: boolean) => {
+          if (ended) return;
+          setIsSpotterFocusLocked(!value);
+        });
+      } else {
+        spotter.setHideOnFocusLost(!isSpotterFocusLocked);
+      }
+    } catch {}
+
+    return () => {
+      ended = true;
+    };
+  }, [isSpotterFocusLocked]);
+
   return (
     <Dialog>
       <Command
@@ -373,21 +418,23 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
         vimBindings={false}
         {...extraCommandProps}
       >
-        {confirmation && <SpotterConfirmation {...confirmation} setConfirmation={setConfirmation} />}
+        {confirmation && <MemoizedSpotterConfirmation {...confirmation} setConfirmation={setConfirmation} />}
         <div className="flex flex-col h-full max-h-screen">
-          <SpotterHeader canGoBack={canGoBack} header={header} hasOuterBody={!!outerBody} />
+          <MemoizedSpotterHeader canGoBack={canGoBack} header={header} hasOuterBody={!!outerBody} />
           {!outerBody && <HorizontalSectionSeperator isLoading={isLoading} />}
           <div className="flex-1 min-h-0">
-            <SpotterBody body={body} useArrowKeys={useArrowKeys} ActionMenu={ActionMenu} />
+            <MemoizedSpotterBody body={body} useArrowKeys={useArrowKeys} ActionMenu={ActionMenu} />
           </div>
           <div className="-z-10 absolute min-w-full min-h-full flex flex-col pb-12">{outerBody}</div>
           <HorizontalSectionSeperator isLoading={isLoading} />
-          <SpotterFooter
+          <MemoizedSpotterFooter
             primaryActions={primaryActions}
             showActionMenu={showActionMenu}
             toggleActionMenu={toggleActionMenu}
             isActionMenuOpen={isActionMenuOpen}
             runAction={runAction}
+            isSpotterFocusLocked={isSpotterFocusLocked}
+            setIsSpotterFocusLocked={setIsSpotterFocusLocked}
           />
 
           {/* Debug Purposes */}

@@ -51,7 +51,7 @@ async function findIconPath(iconName: string): Promise<string> {
     "/usr/share/icons",
     "/usr/share/pixmaps",
     path.join(os.homedir(), ".icons"),
-    path.join(os.homedir(), ".local/share/icons"),
+    path.join(os.homedir(), ".local/share/icons")
   ];
 
   for (const dir of iconDirs) {
@@ -61,7 +61,7 @@ async function findIconPath(iconName: string): Promise<string> {
       if (iconPath) {
         return iconPath;
       }
-    } catch (error) {
+    } catch {
       // Ignore errors and continue searching
     }
   }
@@ -84,11 +84,11 @@ async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: str
         const filePath = path.join(dir, file);
         const entry = await parseDesktopFile(filePath);
         if (entry && entry.Name && entry.Exec && entry.NoDisplay !== "true" && entry.Hidden !== "true") {
-          const execCommand = entry.Exec.split(" ").filter(part => !part.startsWith("%"));
+          const execCommand = entry.Exec.split(" ").filter((part) => !part.startsWith("%"));
           const iconPath = entry.Icon ? await findIconPath(entry.Icon) : "";
-          apps.push({ 
-            name: entry.Name, 
-            icon: iconPath, 
+          apps.push({
+            name: entry.Name,
+            icon: iconPath,
             path: execCommand.join(" ")
           });
         }
@@ -108,11 +108,11 @@ export async function getLinuxApplications(): Promise<{ name: string; icon: stri
     : ["/usr/local/share", "/usr/share", "/var/lib/flatpak/exports/share"];
 
   const flatpakDir = path.join(dataHome, "flatpak", "exports", "share");
-  
+
   const directories = [
     path.join(dataHome, "applications"),
     path.join(flatpakDir, "applications"),
-    ...extraDataDirs.map(dir => path.join(dir, "applications"))
+    ...extraDataDirs.map((dir) => path.join(dir, "applications"))
   ];
 
   const applications: { name: string; icon: string; path: string }[] = [];

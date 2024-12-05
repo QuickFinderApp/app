@@ -11,13 +11,14 @@ export type WindowType = {
 };
 
 const windowsManager = new Map<string, WindowType>();
+const HIDE_DOCK_ENABLED = true;
 
 function WindowsChanged() {
   const windows = Array.from(windowsManager.values());
   const windowCount = windows.length;
 
   // macOS only: hide on dock
-  if (process.platform == "darwin") {
+  if (process.platform == "darwin" && HIDE_DOCK_ENABLED) {
     if (windowCount === 0) {
       app.dock.hide();
     } else {
@@ -30,6 +31,10 @@ function WindowsChanged() {
       }
     }
   }
+}
+
+export function invokeWindowsChanged() {
+  WindowsChanged();
 }
 
 export function getWindow(windowId: string): WindowType | undefined {
@@ -49,12 +54,12 @@ export function registerWindow(windowId: string, windowData: WindowType): boolea
   windowsManager.set(windowId, {
     ...windowData,
     show: () => {
-      windowData.show();
       WindowsChanged();
+      windowData.show();
     },
     hide: () => {
-      windowData.hide();
       WindowsChanged();
+      windowData.hide();
     }
   });
   WindowsChanged();

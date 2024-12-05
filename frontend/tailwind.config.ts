@@ -48,7 +48,9 @@ export default {
         },
         red: {
           DEFAULT: "var(--red)",
-          100: getAlpha("var(--red)", 15)
+          100: getAlpha("var(--red)", 15),
+          200: getAlpha("var(--red)", 30),
+          300: getAlpha("var(--red)", 45)
         },
         orange: {
           DEFAULT: "var(--orange)",

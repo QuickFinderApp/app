@@ -55,7 +55,8 @@ const config: ForgeConfig = {
     icon: "icons/macos/AppIcon.icns",
     appBundleId: "dev.iamevan.quickfinder",
     appVersion,
-    buildVersion
+    buildVersion,
+    appCopyright: "Copyright © 2024 iamEvan"
   },
   rebuildConfig: {},
   makers: [
