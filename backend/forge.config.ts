@@ -42,7 +42,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     executableName: "quick-finder",
     asar: true,
-    icon: "icons/macos/AppIcon.icns",
+    icon: "icons/static/AppIcon.icns",
     appBundleId: "dev.iamevan.quickfinder",
     appVersion,
     buildVersion,
