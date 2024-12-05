@@ -3,25 +3,29 @@ name: Build Preview App for Pull Request
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
 permissions: write-all
 
 jobs:
   check-command:
     runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && github.event.issue.pull_request
     outputs:
       build: ${{ steps.check.outputs.build }}
       build-linux: ${{ steps.check.outputs.build-linux }}
       build-mac: ${{ steps.check.outputs.build-mac }}
       build-win: ${{ steps.check.outputs.build-win }}
     steps:
-      - name: Check PR description
+      - name: Check PR comment
         id: check
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
-          echo "build=$(echo "$PR_BODY" | grep -q '!build' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-linux=$(echo "$PR_BODY" | grep -q '!build-linux' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-mac=$(echo "$PR_BODY" | grep -q '!build-mac' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "build-win=$(echo "$PR_BODY" | grep -q '!build-win' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          PR_COMMENT="${{ github.event.comment.body }}"
+          echo "build=$(echo "$PR_COMMENT" | grep -q '!build' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-linux=$(echo "$PR_COMMENT" | grep -q '!build-linux' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-mac=$(echo "$PR_COMMENT" | grep -q '!build-mac' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "build-win=$(echo "$PR_COMMENT" | grep -q '!build-win' && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
 
   build-linux:
     needs: check-command
