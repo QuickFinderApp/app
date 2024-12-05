@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import os from "os";
 
 export default function LockScreen(): Promise<boolean> {
-  let command;
+  let command: string = "";
 
   // Determine platform and set the appropriate command
   switch (os.platform()) {
