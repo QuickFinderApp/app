@@ -1,6 +1,8 @@
 name: Build Preview App for Pull Request
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   issue_comment:
     types: [created]
 
@@ -32,6 +34,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -102,6 +106,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -170,6 +176,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -297,6 +305,12 @@ jobs:
                 owner,
                 repo,
                 issue_number,
+                body: 'Build Failed. Please check the [build logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.'
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
+
       - name: Comment PR (Success)
         uses: actions/github-script@v6
         if: steps.check_status.outputs.status == 'success'
