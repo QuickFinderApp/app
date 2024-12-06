@@ -97,7 +97,7 @@ export enum KeyName {
 
 export type KeyCombo = KeyName[];
 
-type OS = "Mac" | "Windows" | "Linux" | "Android" | "iOS" | "Unknown";
+export type OS = "Mac" | "Windows" | "Linux" | "Android" | "iOS" | "Unknown";
 
 // Functions
 export function getOS(): OS {
