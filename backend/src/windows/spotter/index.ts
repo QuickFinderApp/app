@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, systemPreferences, Tray } from "electron";
 import { getFocusedDisplayBounds } from "../../modules/utils";
 import path from "path";
 import { createWindowManager } from "../../modules/windows-manager";
@@ -51,15 +51,17 @@ export const createSpotterWindow = (): void => {
     },
     movable: true,
     transparent: true,
-    backgroundColor: "#00FFFFFF",
     frame: false,
     resizable: false,
     show: false,
     alwaysOnTop: true,
     vibrancy: "fullscreen-ui", // on MacOS
-    backgroundMaterial: "acrylic", // on Windows
     skipTaskbar: true // on Windows
   });
+
+  if (process.platform == "win32" && systemPreferences.isAeroGlassEnabled()) {
+    mainWindow.setBackgroundMaterial("acrylic");
+  }
 
   // Load the page
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
