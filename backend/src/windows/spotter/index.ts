@@ -59,10 +59,6 @@ export const createSpotterWindow = (): void => {
     skipTaskbar: true // on Windows
   });
 
-  if (process.platform == "win32" && systemPreferences.isAeroGlassEnabled()) {
-    mainWindow.setBackgroundMaterial("acrylic");
-  }
-
   // Load the page
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
