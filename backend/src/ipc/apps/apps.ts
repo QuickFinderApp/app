@@ -1,6 +1,6 @@
 import { getLinuxApplications } from "./linux";
 import { getMacApplications } from "./macOS";
-import { getWindowsApplications } from "./windows";
+import { getWindowsApplications } from "./windows/windows";
 
 export async function getApplications(): Promise<{ name: string; icon: string; path: string }[]> {
   if (process.platform == "darwin") {
