@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, systemPreferences, Tray } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } from "electron";
 import { getFocusedDisplayBounds } from "../../modules/utils";
 import path from "path";
 import { createWindowManager } from "../../modules/windows-manager";
