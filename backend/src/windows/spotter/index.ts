@@ -69,14 +69,6 @@ export const createSpotterWindow = (): void => {
     });
   }
 
-  function focusWindow() {
-    if (!mainWindow.isFocused()) {
-      mainWindow.minimize();
-      mainWindow.restore();
-      mainWindow.focus();
-    }
-  }
-
   function hideMainWindow() {
     mainWindow.hide();
   }
@@ -88,8 +80,13 @@ export const createSpotterWindow = (): void => {
     const xOffset = Math.round((width - windowBounds.width) / 2);
     const yOffset = Math.round((height - windowBounds.height) / 2);
     mainWindow.setPosition(x + xOffset, y + yOffset);
-    focusWindow();
   }
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.webContents.setZoomFactor(1)
+    mainWindow.webContents.setVisualZoomLevelLimits(1, 1)
+    showMainWindow();
+  })
 
   // Hide the window when it loses focus
   mainWindow.on("blur", () => {
@@ -102,8 +99,6 @@ export const createSpotterWindow = (): void => {
   mainWindow.on("closed", () => {
     removeSpotterWindow();
   });
-
-  showMainWindow();
 
   setSpotterWindow({
     window: mainWindow,
@@ -127,10 +122,11 @@ app.on("ready", () => {
       return createSpotterWindow();
     }
 
-    if (getSpotterWindow().window.isFocused()) {
-      getSpotterWindow()?.hide();
+    const spotterWindow = getSpotterWindow();
+    if (spotterWindow && spotterWindow.window.isFocused() && spotterWindow.window.isVisible()) {
+      spotterWindow.hide();
     } else {
-      getSpotterWindow()?.show();
+      spotterWindow.show();
     }
   });
 

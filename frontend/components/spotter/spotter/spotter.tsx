@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CommonKeyCombos, getActionMenuKeyCombo } from "@/lib/key-combos";
-import { KeyComboHint, KeyName, useKeyCombo } from "@/lib/keyboard";
+import { getOS, KeyComboHint, KeyName, OS, useKeyCombo } from "@/lib/keyboard";
 import { useRouter } from "@/lib/stack-router";
 import { cn } from "@/lib/utils";
 import { Command } from "cmdk";
@@ -401,6 +401,11 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
     };
   }, [isSpotterFocusLocked]);
 
+  const [os, setOS] = useState<OS>("Unknown");
+  useEffect(() => {
+    setOS(getOS())
+  }, [])
+
   return (
     <Dialog>
       <Command
@@ -412,7 +417,8 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
           "md:border border-border",
           "flex flex-col",
           "backdrop-blur-[80px]",
-          "bg-gradient-to-b from-background to-backgroundSecondary"
+          os !== "Windows" && "bg-gradient-to-b from-background to-backgroundSecondary",
+          os == "Windows" && "bg-gradient-to-b from-background-full to-backgroundSecondary-full"
         )}
         loop
         vimBindings={false}
