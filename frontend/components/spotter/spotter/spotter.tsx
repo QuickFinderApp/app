@@ -26,6 +26,7 @@ import { Icon } from "../elements/icon";
 import { setAlertCallback } from "@/lib/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion } from "motion/react";
+import { useSpotterSettings } from "../layouts/settings";
 
 const SCROLL_INCREMENTS = 200;
 
@@ -41,6 +42,8 @@ function useSpotterDataHook(spotterData: SpotterData, runAction: ActionRunner): 
     dataHook = useSpotterImagePreview;
   } else if (spotterData.element == "Error") {
     dataHook = useSpotterError;
+  } else if (spotterData.element == "Settings") {
+    dataHook = useSpotterSettings;
   }
   return dataHook(spotterData, runAction);
 }
@@ -342,7 +345,8 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
     disabledListeners = [],
     useArrowKeys = false,
     actionArguments = {},
-    canRunAction: canRunActionChecker = () => true
+    canRunAction: canRunActionChecker = () => true,
+    hasFooter = true
   } = useSpotterDataHook(spotterData, runAction);
 
   runActionArguments = actionArguments;
@@ -433,15 +437,17 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
           </div>
           <div className="-z-10 absolute min-w-full min-h-full flex flex-col pb-12">{outerBody}</div>
           <HorizontalSectionSeperator isLoading={isLoading} />
-          <MemoizedSpotterFooter
-            primaryActions={primaryActions}
-            showActionMenu={showActionMenu}
-            toggleActionMenu={toggleActionMenu}
-            isActionMenuOpen={isActionMenuOpen}
-            runAction={runAction}
-            isSpotterFocusLocked={isSpotterFocusLocked}
-            setIsSpotterFocusLocked={setIsSpotterFocusLocked}
-          />
+          {hasFooter && (
+            <MemoizedSpotterFooter
+              primaryActions={primaryActions}
+              showActionMenu={showActionMenu}
+              toggleActionMenu={toggleActionMenu}
+              isActionMenuOpen={isActionMenuOpen}
+              runAction={runAction}
+              isSpotterFocusLocked={isSpotterFocusLocked}
+              setIsSpotterFocusLocked={setIsSpotterFocusLocked}
+            />
+          )}
 
           {/* Debug Purposes */}
           <div className="hidden">

@@ -5,13 +5,15 @@ import { SpotterErrorData } from "./error";
 import { SpotterImagePreviewData } from "./image-preview";
 import { SpotterListData } from "./list";
 import { SpotterUnknownData } from "./unknown";
+import { SpotterSettingsData } from "./settings";
 
 export type SpotterData =
   | SpotterUnknownData
   | SpotterDetailData
   | SpotterListData
   | SpotterImagePreviewData
-  | SpotterErrorData;
+  | SpotterErrorData
+  | SpotterSettingsData;
 
 export type SpotterLayout = {
   header?: JSX.Element;
@@ -24,4 +26,5 @@ export type SpotterLayout = {
   useArrowKeys?: boolean;
   actionArguments?: SpotterActionArguments;
   canRunAction?: (action: SpotterAction) => boolean;
+  hasFooter?: boolean;
 };
