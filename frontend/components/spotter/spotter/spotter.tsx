@@ -435,7 +435,9 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
           <div className="flex-1 min-h-0">
             <MemoizedSpotterBody body={body} useArrowKeys={useArrowKeys} ActionMenu={ActionMenu} />
           </div>
-          <div className="-z-10 absolute min-w-full min-h-full flex flex-col pb-12">{outerBody}</div>
+          <div className={cn("-z-10 absolute min-w-full min-h-full flex flex-col", hasFooter && "pb-12")}>
+            {outerBody}
+          </div>
           <HorizontalSectionSeperator isLoading={isLoading} />
           {hasFooter && (
             <MemoizedSpotterFooter
