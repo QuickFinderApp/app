@@ -41,54 +41,6 @@ jobs:
           npm run make
         working-directory: ./backend
 
-      - name: Archive the build (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          mkdir -p distributables/deb distributables/rpm
-          cp ./backend/out/make/deb/**/*.deb distributables/deb/quick-finder-amd64.deb
-          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/quick-finder-x86_64.rpm
-          cd distributables
-          zip -r quickfinder-linux.zip *
-          cd ..
-
-      - name: Collect built distributables (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          mkdir distributables
-          cd ./backend/out/make/squirrel.windows/*
-          cp *.exe ../../../../../distributables/quickfinder-windows-installer.exe
-          cd ../../../../..
-
-      - name: Collect built distributables (macOS)
-        if: matrix.os == 'macos-latest'
-        run: |
-          mkdir distributables
-          cd ./backend/out/make
-          cp *.dmg ../../../distributables/QuickFinder.dmg
-          cd ../../..
-
-      - name: Upload the build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-${{ matrix.os }}
-          path: distributables/*
-
-  release:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: ./artifacts
-
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ./artifacts
-
       - name: Get release
         id: get_release
         uses: bruceadams/get-release@v1.3.2
@@ -96,48 +48,45 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset (Ubuntu - deb)
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/deb/quick-finder-amd64.deb
+          asset_path: ./backend/out/make/deb/**/*.deb
           asset_name: quick-finder-amd64-installer.deb
           asset_content_type: application/vnd.debian.binary-package
 
       - name: Upload Release Asset (Ubuntu - rpm)
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-ubuntu-latest/rpm/quick-finder-x86_64.rpm
+          asset_path: ./backend/out/make/rpm/**/*.rpm
           asset_name: quick-finder-x86_64-installer.rpm
           asset_content_type: application/x-rpm
 
       - name: Upload Release Asset (Windows - exe)
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-windows-latest/quickfinder-windows-installer.exe
+          asset_path: ./backend/out/make/squirrel.windows/*/*.exe
           asset_name: quickfinder-windows-installer.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset (macOS)
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./artifacts/build-macos-latest/QuickFinder-installer.dmg
+          asset_path: ./backend/out/make/*.dmg
           asset_name: quickfinder-macos-installer.dmg
           asset_content_type: application/octet-stream
-
-      - name: Delete artifacts
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: |
-            build-ubuntu-latest
-            build-macos-latest
