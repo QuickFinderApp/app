@@ -87,7 +87,7 @@ async function getWindowsStoreApps(): Promise<ApplicationInfo[]> {
 
 export async function getWindowsApplications(): Promise<ApplicationInfo[]> {
   const manuallyInstalledApps = await getManuallyInstalledApps();
-  const windowsStoreApps: any[] = [] //await getWindowsStoreApps();
+  const windowsStoreApps: any[] = await getWindowsStoreApps();
 
   return [...manuallyInstalledApps, ...windowsStoreApps];
 }
