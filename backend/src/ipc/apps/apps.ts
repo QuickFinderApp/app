@@ -5,8 +5,8 @@ import { getWindowsApplications } from "./windows/windows";
 export type ApplicationInfo = {
   name: string;
   icon: string;
-  path: string
-}
+  path: string;
+};
 
 export async function getApplications(): Promise<ApplicationInfo[]> {
   if (process.platform == "darwin") {

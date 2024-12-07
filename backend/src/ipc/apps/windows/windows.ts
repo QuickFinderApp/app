@@ -1,5 +1,5 @@
-import path from "path"
-import os from "os"
+import path from "path";
+import os from "os";
 import { getWindowsAppsPowershellScript, getWindowsStoreAppsScript } from "./powershell-scripts";
 import powershell from "../../../modules/utilities/powershell";
 import { ApplicationInfo } from "../apps";
@@ -32,7 +32,7 @@ function getPowershellScript(folderPaths: string[], fileExtensions: string[]): s
 async function getManuallyInstalledApps(): Promise<ApplicationInfo[]> {
   const folderPaths = [
     "C:\\ProgramData\\Microsoft\\Windows\\Start Menu",
-    path.join(os.homedir(), "AppData", "Roaming", "Microsoft", "Windows", "Start Menu"),
+    path.join(os.homedir(), "AppData", "Roaming", "Microsoft", "Windows", "Start Menu")
   ];
   const fileExtensions = ["lnk"];
 
@@ -40,14 +40,13 @@ async function getManuallyInstalledApps(): Promise<ApplicationInfo[]> {
     return [];
   }
 
-  const stdout = await powershell.executeScript(
-    getPowershellScript(folderPaths, fileExtensions),
-    { maxBuffer: POWERSHELL_MAX_BUFFER_SIZE },
-  );
+  const stdout = await powershell.executeScript(getPowershellScript(folderPaths, fileExtensions), {
+    maxBuffer: POWERSHELL_MAX_BUFFER_SIZE
+  });
 
   const windowsApplicationRetrieverResults = <WindowsApplicationRetrieverResult[]>JSON.parse(stdout);
   const appIcons = await IconGrabber.extractFileIcons(
-    windowsApplicationRetrieverResults.map(({ FullName }) => FullName),
+    windowsApplicationRetrieverResults.map(({ FullName }) => FullName)
   );
 
   return windowsApplicationRetrieverResults.map(({ BaseName, FullName }) => {
@@ -57,7 +56,7 @@ async function getManuallyInstalledApps(): Promise<ApplicationInfo[]> {
       name: BaseName,
       icon,
       path: FullName
-    }
+    };
   });
 }
 
@@ -69,20 +68,18 @@ async function getWindowsStoreApps(): Promise<ApplicationInfo[]> {
   }
 
   const stdout = await powershell.executeScript(getWindowsStoreAppsScript, {
-    maxBuffer: POWERSHELL_MAX_BUFFER_SIZE,
+    maxBuffer: POWERSHELL_MAX_BUFFER_SIZE
   });
 
   const windowStoreApplications = <WindowsStoreApplication[]>JSON.parse(stdout);
 
-  return windowStoreApplications.map(
-    ({ AppId, DisplayName, LogoBase64 }) => {
-      return {
-        name: DisplayName,
-        icon: pngBase64ToUrl(LogoBase64),
-        path: `shell:AppsFolder\\${AppId}`
-      }
-    }
-  );
+  return windowStoreApplications.map(({ AppId, DisplayName, LogoBase64 }) => {
+    return {
+      name: DisplayName,
+      icon: pngBase64ToUrl(LogoBase64),
+      path: `shell:AppsFolder\\${AppId}`
+    };
+  });
 }
 
 export async function getWindowsApplications(): Promise<ApplicationInfo[]> {

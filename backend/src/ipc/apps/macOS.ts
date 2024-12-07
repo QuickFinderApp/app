@@ -16,10 +16,7 @@ async function getFileIcon(path: string): Promise<string | null> {
 }
 
 const MAX_DEPTH = 1;
-async function getMacApplicationsInDirectory(
-  appsDir: string,
-  depth = 0
-): Promise<ApplicationInfo[]> {
+async function getMacApplicationsInDirectory(appsDir: string, depth = 0): Promise<ApplicationInfo[]> {
   try {
     const entries = await fsPromises.readdir(appsDir, { withFileTypes: true });
 

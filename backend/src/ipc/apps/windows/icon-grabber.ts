@@ -1,4 +1,4 @@
-import path from "path"
+import path from "path";
 import { getTempDirectory, pathExists } from "../../../modules/utilities/filesystem";
 import powershell from "../../../modules/utilities/powershell";
 import { extractAssociatedFileIconPowershellScript } from "./powershell-scripts";
@@ -14,9 +14,7 @@ interface FileIconExtractor {
 async function filterAlreadyExistingFilePaths(filePaths: string[]): Promise<string[]> {
   const result: string[] = [];
 
-  const promiseResults = await Promise.allSettled(
-    filePaths.map((f) => pathExists(getTempFilePath(f))),
-  );
+  const promiseResults = await Promise.allSettled(filePaths.map((f) => pathExists(getTempFilePath(f))));
 
   for (let i = 0; i < filePaths.length; i++) {
     const filePath = filePaths[i];
@@ -66,9 +64,7 @@ function getTempFilePath(filePath: string): string {
 }
 
 function matchesFilePath(filePath: string) {
-  return [".lnk", ".url", ".appref-ms", ".exe"].some((fileExtension) =>
-    filePath.toLowerCase().endsWith(fileExtension),
-  );
+  return [".lnk", ".url", ".appref-ms", ".exe"].some((fileExtension) => filePath.toLowerCase().endsWith(fileExtension));
 }
 
 async function extractFileIcon(filePath: string) {
@@ -90,7 +86,7 @@ async function extractFileIcons(filePaths: string[]) {
   }
 
   for (const filePath of filePaths) {
-    result[filePath] = await pngFileToUrl(cacheFilePaths[filePath])
+    result[filePath] = await pngFileToUrl(cacheFilePaths[filePath]);
   }
 
   return result;
@@ -100,6 +96,6 @@ const IconGrabber: FileIconExtractor = {
   matchesFilePath,
   extractFileIcon,
   extractFileIcons
-}
+};
 
-export default IconGrabber
+export default IconGrabber;
