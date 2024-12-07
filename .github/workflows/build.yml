@@ -75,7 +75,7 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: ./artifacts
+        working-directory: ./
 
       - name: Upload Release Asset (Ubuntu - deb)
         if: matrix.os == 'ubuntu-latest'
@@ -84,7 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./distributables/deb/quick-finder-amd64.deb
+          asset_path: distributables/deb/quick-finder-amd64.deb
           asset_name: quick-finder-amd64-installer.deb
           asset_content_type: application/vnd.debian.binary-package
 
