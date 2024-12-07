@@ -4,6 +4,8 @@ import path from "path";
 import os from "os";
 import { exec } from "child_process";
 import util from "util";
+import { ApplicationInfo } from "./apps";
+import { pathExists } from "../../modules/utilities/filesystem";
 
 const execAsync = util.promisify(exec);
 
@@ -70,10 +72,11 @@ async function findIconPath(iconName: string): Promise<string> {
   return iconName;
 }
 
-async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: string; icon: string; path: string }[]> {
-  const apps: { name: string; icon: string; path: string }[] = [];
+async function getLinuxApplicationsInDirectory(dir: string): Promise<ApplicationInfo[]> {
+  const apps: ApplicationInfo[] = [];
 
-  if (!fs.existsSync(dir)) {
+  const directoryExists = await pathExists(dir);
+  if (!directoryExists) {
     return [];
   }
 
@@ -101,7 +104,7 @@ async function getLinuxApplicationsInDirectory(dir: string): Promise<{ name: str
   return apps;
 }
 
-export async function getLinuxApplications(): Promise<{ name: string; icon: string; path: string }[]> {
+export async function getLinuxApplications(): Promise<ApplicationInfo[]> {
   const dataHome = process.env.XDG_DATA_HOME || path.join(os.homedir(), ".local", "share");
   const extraDataDirs = process.env.XDG_DATA_DIRS
     ? process.env.XDG_DATA_DIRS.split(":")
@@ -115,7 +118,7 @@ export async function getLinuxApplications(): Promise<{ name: string; icon: stri
     ...extraDataDirs.map((dir) => path.join(dir, "applications"))
   ];
 
-  const applications: { name: string; icon: string; path: string }[] = [];
+  const applications: ApplicationInfo[] = [];
 
   const promises = directories.map(async (dir) => {
     const appsFound = await getLinuxApplicationsInDirectory(dir).catch(() => []);
