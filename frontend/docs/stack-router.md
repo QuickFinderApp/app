@@ -44,9 +44,7 @@ function App() {
 function HomePage() {
   const router = useRouter();
 
-  return (
-    <button onClick={() => router.push(<DetailPage />)}>Go to Detail</button>
-  );
+  return <button onClick={() => router.push(<DetailPage />)}>Go to Detail</button>;
 }
 ```
 
@@ -142,9 +140,7 @@ function FormPage() {
   return (
     <div>
       <input onChange={() => setIsDirty(true)} />
-      <button onClick={() => router.pop()}>
-        Go Back (will prompt if form is dirty)
-      </button>
+      <button onClick={() => router.pop()}>Go Back (will prompt if form is dirty)</button>
     </div>
   );
 }
@@ -213,14 +209,8 @@ function ProtectedFormExample() {
 
   return (
     <div>
-      <input
-        value={formData}
-        onChange={(e) => setFormData(e.target.value)}
-        placeholder="Type something..."
-      />
-      <button onClick={() => router.pop()}>
-        Go Back (will prompt if form has data)
-      </button>
+      <input value={formData} onChange={(e) => setFormData(e.target.value)} placeholder="Type something..." />
+      <button onClick={() => router.pop()}>Go Back (will prompt if form has data)</button>
     </div>
   );
 }

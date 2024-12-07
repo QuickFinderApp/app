@@ -8,14 +8,14 @@ export async function openApp(event: IpcMainInvokeEvent, appPath: string): Promi
   if (process.platform === "linux") {
     try {
       // Split the command and its arguments
-      const [command, ...args] = appPath.split(' ');
-      
+      const [command, ...args] = appPath.split(" ");
+
       // Escape each argument individually
-      const escapedArgs = args.map(arg => `"${arg.replace(/"/g, '\\"')}"`);
-      
+      const escapedArgs = args.map((arg) => `"${arg.replace(/"/g, '\\"')}"`);
+
       // Reconstruct the command
-      const fullCommand = `${command} ${escapedArgs.join(' ')}`;
-      
+      const fullCommand = `${command} ${escapedArgs.join(" ")}`;
+
       await execAsync(fullCommand);
       return "App launched successfully";
     } catch (error) {

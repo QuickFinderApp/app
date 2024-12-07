@@ -403,8 +403,8 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
 
   const [os, setOS] = useState<OS>("Unknown");
   useEffect(() => {
-    setOS(getOS())
-  }, [])
+    setOS(getOS());
+  }, []);
 
   return (
     <Dialog>

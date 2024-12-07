@@ -4,12 +4,7 @@ import { SpotterActionMenu } from "../types/others/action-menu";
 
 export function useSpotterUnknown() {
   const body = (
-    <CenterText
-      icon="Frown"
-      iconClassName="text-foreground"
-      title="Not Found"
-      description="How did you get here?"
-    />
+    <CenterText icon="Frown" iconClassName="text-foreground" title="Not Found" description="How did you get here?" />
   );
 
   const router = useRouter();

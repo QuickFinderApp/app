@@ -82,11 +82,11 @@ export const createSpotterWindow = (): void => {
     mainWindow.setPosition(x + xOffset, y + yOffset);
   }
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.setZoomFactor(1)
-    mainWindow.webContents.setVisualZoomLevelLimits(1, 1)
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.webContents.setZoomFactor(1);
+    mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
     showMainWindow();
-  })
+  });
 
   // Hide the window when it loses focus
   mainWindow.on("blur", () => {
