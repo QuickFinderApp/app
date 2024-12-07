@@ -41,6 +41,32 @@ jobs:
           npm run make
         working-directory: ./backend
 
+      - name: Archive the build (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir -p distributables/deb distributables/rpm
+          cp ./backend/out/make/deb/**/*.deb distributables/deb/quick-finder-amd64.deb
+          cp ./backend/out/make/rpm/**/*.rpm distributables/rpm/quick-finder-x86_64.rpm
+          cd distributables
+          zip -r quickfinder-linux.zip *
+          cd ..
+
+      - name: Collect built distributables (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir distributables
+          cd ./backend/out/make/squirrel.windows/*
+          cp *.exe ../../../../../distributables/quickfinder-windows-installer.exe
+          cd ../../../../..
+
+      - name: Collect built distributables (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir distributables
+          cd ./backend/out/make
+          cp *.dmg ../../../distributables/QuickFinder.dmg
+          cd ../../..
+
       - name: Get release
         id: get_release
         uses: bruceadams/get-release@v1.3.2
@@ -54,7 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./backend/out/make/deb/**/*.deb
+          asset_path: ./distributables/deb/quick-finder-amd64.deb
           asset_name: quick-finder-amd64-installer.deb
           asset_content_type: application/vnd.debian.binary-package
 
@@ -65,7 +91,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./backend/out/make/rpm/**/*.rpm
+          asset_path: ./distributables/rpm/quick-finder-x86_64.rpm
           asset_name: quick-finder-x86_64-installer.rpm
           asset_content_type: application/x-rpm
 
@@ -76,7 +102,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./backend/out/make/squirrel.windows/*/*.exe
+          asset_path: ./distributables/quickfinder-windows-installer.exe
           asset_name: quickfinder-windows-installer.exe
           asset_content_type: application/octet-stream
 
@@ -87,6 +113,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./backend/out/make/*.dmg
+          asset_path: ./distributables/QuickFinder-installer.dmg
           asset_name: quickfinder-macos-installer.dmg
           asset_content_type: application/octet-stream
