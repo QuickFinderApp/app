@@ -13,6 +13,8 @@ export type SpotterCommand = {
   filePath?: string;
   webLink?: string;
 
+  canExecute?: boolean;
+
   execute?: (context: ActionContext) => Promise<void> | void;
   render?: (context: ActionContext) => JSX.Element;
 } & SpotterListItem;

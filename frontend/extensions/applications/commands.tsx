@@ -58,6 +58,7 @@ export function useApplicationCommands() {
         id: "LoadingApplications",
         title: "Loading Applications...",
         type: "Application",
+        canExecute: false,
         execute: () => {}
       });
     }

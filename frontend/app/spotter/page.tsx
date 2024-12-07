@@ -1,5 +1,5 @@
-import SpotterHome from "@/components/spotter/pages/home";
+import SpotterCommandsHub from "@/components/spotter/pages/commands-hub";
 
 export default function Home() {
-  return <SpotterHome />;
+  return <SpotterCommandsHub />;
 }

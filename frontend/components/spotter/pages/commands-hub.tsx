@@ -28,7 +28,7 @@ function getCommandTypeDisplay(command: SpotterCommandType): string {
   return command;
 }
 
-export default function SpotterHome() {
+export default function SpotterCommandsHub() {
   const router = useRouter();
 
   function executeCommand(command: SpotterCommand, context: ActionContext) {
@@ -68,8 +68,10 @@ export default function SpotterHome() {
       id = `${command.extensionId}.${id}`;
     }
 
-    const actionMenuItems: SpotterItem[] = [
-      {
+    const actionMenuItems: SpotterItem[] = [];
+
+    if (command.canExecute !== false) {
+      actionMenuItems.push({
         type: "Action",
         id: "Main",
         icon: "PanelTopOpen",
@@ -77,9 +79,8 @@ export default function SpotterHome() {
         onAction: (context) => executeCommand(command, context),
         isPrimary: true,
         shortcut: "Enter"
-      },
-      ...(command.actionMenu?.items || [])
-    ];
+      });
+    }
 
     if (command.filePath) {
       actionMenuItems.push({
@@ -106,6 +107,10 @@ export default function SpotterHome() {
           }
         }
       });
+    }
+
+    if (command.actionMenu?.items) {
+      actionMenuItems.push(...command.actionMenu.items);
     }
 
     return {
