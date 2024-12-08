@@ -70,7 +70,7 @@ body {
 }
 
 .custom-scrollbar {
-  scrollbar-width: thin;
+  scrollbar-width: 10px;
   scrollbar-color: #ffffff99 transparent;
 }
 
