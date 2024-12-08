@@ -29,6 +29,8 @@ export const createSettingsWindow = (): void => {
       webSecurity: false,
       devTools: IS_DEV_MODE
     },
+    minHeight: 400,
+    minWidth: 700,
     movable: true,
     transparent: false,
     frame: false,
@@ -40,7 +42,7 @@ export const createSettingsWindow = (): void => {
     },
     resizable: true,
     show: false,
-    vibrancy: "fullscreen-ui", // on MacOS
+    vibrancy: "fullscreen-ui" // on MacOS
   });
 
   // Load the page

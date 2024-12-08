@@ -1,5 +1,5 @@
-import { SettingsPage } from "@/components/settings/settings";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <SettingsPage activeTab="general" />;
+  return redirect("/settings/general");
 }
