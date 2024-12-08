@@ -2,6 +2,7 @@ import { app } from "electron";
 import ipc from "./ipc";
 import { createOverlayWindow } from "./windows/overlay";
 import { createSpotterWindow } from "./windows/spotter";
+import { registerFileProtocol } from "./modules/protocols/file";
 
 // single instance only
 const gotLock = app.requestSingleInstanceLock();
@@ -22,6 +23,8 @@ if (!gotLock) {
   app.on("ready", () => {
     createSpotterWindow();
     createOverlayWindow();
+
+    registerFileProtocol();
   });
 
   app.on("activate", () => {
