@@ -28,6 +28,12 @@ declare global {
   const overlay: {
     onConfetti: (callback: () => void) => void;
   };
+
+  const main: {
+    getVersion: () => Promise<string>;
+    getSetting: <T>(setting: string) => Promise<T>;
+    setSetting: <T>(setting: string, value: T) => Promise<boolean>;
+  };
 }
 
 // Ensure this file is treated as a module

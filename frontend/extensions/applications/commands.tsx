@@ -2,7 +2,7 @@
 
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
 import { ApplicationItem } from "@/components/spotter/types/others/globals";
-import { hideSpotter, openApp } from "@/lib/utils";
+import { hideSpotter, openApp } from "@/lib/utility/spotter";
 import { useEffect, useMemo, useState } from "react";
 
 async function getAllApplications() {

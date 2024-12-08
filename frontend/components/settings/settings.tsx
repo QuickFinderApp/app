@@ -1,12 +1,15 @@
 "use client";
 
-import { cn, openLink } from "@/lib/utils";
+import { openLink } from "@/lib/utility/spotter";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getOS } from "@/lib/keyboard";
-import SettingsAboutPage from "@/components/settings/pages/about";
 import { SettingsNavBar } from "./nav-bar";
 import { AppWindowIcon, CogIcon, CpuIcon, HammerIcon } from "lucide-react";
+import SettingsGeneralPage from "./pages/general";
+import SettingsAboutPage from "@/components/settings/pages/about";
+import SettingsComingSoonPage from "./pages/coming-soon";
 
 type SettingsPageProps = {
   activeTab: string;
@@ -19,19 +22,19 @@ export function SettingsPage({ activeTab }: SettingsPageProps) {
       id: "general",
       label: "General",
       icon: CogIcon,
-      content: SettingsAboutPage
+      content: SettingsGeneralPage
     },
     {
       id: "extensions",
       label: "Extensions",
       icon: CpuIcon,
-      content: SettingsAboutPage
+      content: SettingsComingSoonPage
     },
     {
       id: "settings",
       label: "Settings",
       icon: HammerIcon,
-      content: SettingsAboutPage
+      content: SettingsComingSoonPage
     },
     {
       id: "about",

@@ -1,5 +1,5 @@
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
-import { openLink } from "@/lib/utils";
+import { openLink } from "@/lib/utility/spotter";
 
 async function execute() {
   openLink("https://v0.dev");
