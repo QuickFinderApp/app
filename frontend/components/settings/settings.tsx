@@ -47,12 +47,14 @@ export function SettingsPage({ activeTab }: SettingsPageProps) {
   const currentTab = tabs.find((tab) => tab.id === activeTab);
   const TabContent = currentTab?.content;
 
+  const transparentBackground = (os !== "Windows" && os !== "Unknown")
+
   return (
     <div
       className={cn(
-        "h-screen flex flex-col",
-        os !== "Windows" && "bg-gradient-to-b from-background to-backgroundSecondary",
-        os == "Windows" && "bg-gradient-to-b from-background-full to-backgroundSecondary-full"
+        "h-screen flex flex-col border border-border",
+        transparentBackground && "bg-gradient-to-b from-background to-backgroundSecondary",
+        !transparentBackground && "bg-gradient-to-b from-background-full to-backgroundSecondary-full"
       )}
     >
       <div className="h-[30px] enableDrag flex items-center justify-center">

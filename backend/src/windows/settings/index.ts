@@ -30,16 +30,17 @@ export const createSettingsWindow = (): void => {
       devTools: IS_DEV_MODE
     },
     movable: true,
-    transparent: true,
+    transparent: false,
     frame: false,
     titleBarStyle: "hidden",
     titleBarOverlay: {
-      height: 30
+      height: 30,
+      color: "#000000",
+      symbolColor: "#ffffff"
     },
-    resizable: false,
+    resizable: true,
     show: false,
     vibrancy: "fullscreen-ui", // on MacOS
-    skipTaskbar: true // on Windows
   });
 
   // Load the page
