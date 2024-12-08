@@ -17,26 +17,10 @@ export const rendererConfig: Configuration = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        // main (dev)
+        // main
         {
           from: "src/out",
           to: ".",
-          globOptions: {
-            ignore: ["**/index.html"]
-          }
-        },
-        // spotter window (prod)
-        {
-          from: "src/out",
-          to: "./main_window",
-          globOptions: {
-            ignore: ["**/index.html"]
-          }
-        },
-        // overlay window (prod)
-        {
-          from: "src/out",
-          to: "./overlay_window",
           globOptions: {
             ignore: ["**/index.html"]
           }
@@ -50,8 +34,5 @@ export const rendererConfig: Configuration = {
   ],
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css"]
-  },
-  output: {
-    publicPath: "./"
   }
 };

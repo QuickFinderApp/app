@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV === "development";
+// const isDev = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
   output: "export",
@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
   }
 };
 
-if (!isDev) {
-  nextConfig.assetPrefix = ".";
-}
+// if (!isDev) {
+//   nextConfig.assetPrefix = ".";
+// }
 
 export default nextConfig;
