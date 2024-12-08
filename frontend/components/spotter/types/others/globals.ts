@@ -18,6 +18,7 @@ declare global {
     quit: () => void;
 
     launchConfetti: () => void;
+    openSettings: () => void;
 
     runSystemAction: (action: string) => Promise<boolean>;
 

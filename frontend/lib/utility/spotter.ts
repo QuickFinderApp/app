@@ -48,6 +48,13 @@ export function confetti() {
   return spotter.launchConfetti();
 }
 
+export function openSettings() {
+  if (!spotterGlobalExists()) {
+    return;
+  }
+  return spotter.openSettings();
+}
+
 export function runSystemAction(action: string) {
   if (!spotterGlobalExists()) {
     return Promise.resolve(false);

@@ -95,6 +95,14 @@ const config: ForgeConfig = {
             preload: {
               js: "./src/windows/overlay/preload.ts"
             }
+          },
+          {
+            name: "settings_window",
+            html: "./src/out/settings.html",
+            js: "./src/windows/settings/renderer.ts",
+            preload: {
+              js: "./src/windows/settings/preload.ts"
+            }
           }
         ]
       }

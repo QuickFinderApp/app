@@ -1,6 +1,5 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import { getFocusedDisplayBounds } from "../../modules/utils";
-import path from "path";
 import { createWindowManager } from "../../modules/windows-manager";
 import { IS_DEV_MODE } from "../../config";
 
@@ -108,7 +107,7 @@ export const createSpotterWindow = (): void => {
   });
 };
 
-ipcMain.handle("open-spotter", () => getSpotterWindow()?.show());
+ipcMain.handle("open-spotter", () => createSpotterWindow());
 ipcMain.handle("hide-spotter", () => getSpotterWindow()?.hide());
 
 ipcMain.handle("get-hide-spotter-on-focus-lost", () => USER_HIDE_ON_FOCUS_LOST);
@@ -129,21 +128,4 @@ app.on("ready", () => {
       spotterWindow.show();
     }
   });
-
-  const glassIcon = nativeImage
-    .createFromPath(path.join(__dirname, "assets", "glass.png"))
-    .resize({ width: 20, height: 20 });
-  const mainTray = new Tray(glassIcon);
-
-  const trayContextMenu = Menu.buildFromTemplate([
-    {
-      label: "Open Spotter",
-      type: "normal",
-      click: () => getSpotterWindow()?.show()
-    },
-    { type: "separator" },
-    { label: "Quit", type: "normal", click: () => app.quit() }
-  ]);
-
-  mainTray.setContextMenu(trayContextMenu);
 });

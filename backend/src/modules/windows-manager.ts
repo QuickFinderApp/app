@@ -22,7 +22,7 @@ function WindowsChanged() {
     if (windowCount === 0) {
       app.dock.hide();
     } else {
-      const hasDockIcon = windows.every((window) => !window.hiddenFromDock);
+      const hasDockIcon = windows.some((window) => !window.hiddenFromDock);
 
       let hideDockIcon: boolean | null = null;
 
