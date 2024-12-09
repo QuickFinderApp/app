@@ -5,6 +5,7 @@ import { createSpotterWindow } from "./windows/spotter";
 import { registerFileProtocol } from "./modules/protocols/file";
 import { setupRendererBindings } from "./modules/globals/main";
 import { createMainTray } from "./modules/trays/main";
+import "./modules/stores/settings";
 
 // single instance only
 const gotLock = app.requestSingleInstanceLock();

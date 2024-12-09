@@ -9,13 +9,11 @@ export function setupMainGlobal(contextBridge: ContextBridge) {
     },
 
     getSetting: async (setting: string) => {
-      // TODO!!
-      return false;
+      return ipcRenderer.invoke("get-setting", setting);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSetting: async (setting: string, newValue: any) => {
-      // TODO!!
-      return false;
+      return ipcRenderer.invoke("set-setting", setting, newValue);
     }
   });
 }

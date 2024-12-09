@@ -18,7 +18,7 @@ import { execSync } from "child_process";
 let appVersion = "1.0.0";
 let buildVersion = "1.0.0";
 
-const DEV_REGENERATE_FRONTEND = true;
+const DEV_REGENERATE_FRONTEND = false;
 let REGENERATE_FRONTEND = DEV_REGENERATE_FRONTEND;
 if (process.env.BUILD_ENV == "production") {
   REGENERATE_FRONTEND = true;
