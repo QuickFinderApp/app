@@ -126,3 +126,11 @@ body {
 .blacklistDrag {
   -webkit-app-region: no-drag;
 }
+
+*,
+*::after,
+*::before {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}

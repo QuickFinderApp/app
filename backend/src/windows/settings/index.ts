@@ -42,7 +42,8 @@ export const createSettingsWindow = (): void => {
     },
     resizable: true,
     show: false,
-    vibrancy: "fullscreen-ui" // on MacOS
+    vibrancy: "fullscreen-ui", // on MacOS
+    backgroundMaterial: "acrylic" // on Windows
   });
 
   // Load the page

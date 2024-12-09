@@ -49,12 +49,13 @@ export const createSpotterWindow = (): void => {
       devTools: IS_DEV_MODE
     },
     movable: true,
-    transparent: true,
+    transparent: false,
     frame: false,
     resizable: false,
     show: false,
     alwaysOnTop: true,
     vibrancy: "fullscreen-ui", // on MacOS
+    backgroundMaterial: "acrylic", // on Windows
     skipTaskbar: true // on Windows
   });
 
