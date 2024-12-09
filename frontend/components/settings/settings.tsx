@@ -10,13 +10,12 @@ import { AppWindowIcon, CogIcon, CpuIcon, HammerIcon } from "lucide-react";
 import SettingsGeneralPage from "./pages/general";
 import SettingsAboutPage from "@/components/settings/pages/about";
 import SettingsComingSoonPage from "./pages/coming-soon";
+import { useEffect, useState } from "react";
 
 type SettingsPageProps = {
   activeTab: string;
 };
 export function SettingsPage({ activeTab }: SettingsPageProps) {
-  const os = getOS();
-
   const tabs = [
     {
       id: "general",
@@ -47,7 +46,13 @@ export function SettingsPage({ activeTab }: SettingsPageProps) {
   const currentTab = tabs.find((tab) => tab.id === activeTab);
   const TabContent = currentTab?.content;
 
-  const transparentBackground = os !== "Windows" && os !== "Unknown";
+  const [os, setOS] = useState("Unknown");
+  useEffect(() => {
+    const newOS = getOS();
+    setOS(newOS);
+  }, []);
+
+  const transparentBackground = os !== "Windows";
 
   return (
     <div
