@@ -49,7 +49,7 @@ export const createSpotterWindow = (): void => {
       devTools: IS_DEV_MODE
     },
     movable: true,
-    transparent: false,
+    transparent: true,
     frame: false,
     resizable: false,
     show: false,

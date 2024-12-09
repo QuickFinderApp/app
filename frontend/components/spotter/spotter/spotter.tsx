@@ -409,8 +409,8 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
           "left-1/2 top-1/2",
           "fixed z-40 w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl transition-all",
           "max-md:h-full max-h-screen",
-          false && "rounded-xl max-md:rounded-none",
-          false && "md:border border-border",
+          "rounded-xl max-md:rounded-none",
+          "md:border border-border",
           "flex flex-col",
           "backdrop-blur-[80px]",
           "bg-gradient-to-b from-background to-backgroundSecondary"
