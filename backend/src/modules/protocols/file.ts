@@ -23,6 +23,8 @@ export function registerFileProtocol() {
       } else {
         return respondWithFile(fileUrl);
       }
+    } else if (fs.existsSync(concantatedFilePath + "/index.html")) {
+      concantatedFilePath = concantatedFilePath + "/index.html";
     }
 
     try {
