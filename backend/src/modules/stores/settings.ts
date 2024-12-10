@@ -1,17 +1,21 @@
 import { app, ipcMain } from "electron";
 import Store from "../../../dependencies/electron-storage/index";
+import { getAllWindows } from "../windows-manager";
 
 const settingsStore = new Store({
   name: "settings",
   defaults: {
-    launchOnLogin: false
+    launchOnLogin: false,
+    theme: "system"
   },
-  clearInvalidConfig: true,
   schema: {
     type: "object",
     properties: {
       launchOnLogin: {
         type: "boolean"
+      },
+      theme: {
+        type: "string"
       }
     },
     additionalProperties: false
@@ -25,6 +29,11 @@ export function getSetting(setting: string) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setSetting(setting: string, value: any) {
   settingsStore.set(setting as undefined, value);
+
+  getAllWindows().forEach(({ window }) => {
+    window.webContents.send("settings-changed");
+  });
+
   return true;
 }
 

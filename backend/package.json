@@ -24,10 +24,12 @@
     "@electron-forge/plugin-fuses": "^7.6.0",
     "@electron-forge/plugin-webpack": "^7.6.0",
     "@electron/fuses": "^1.8.0",
+    "@types/auto-launch": "^5.0.5",
     "@types/mime-types": "^2.1.4",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "ajv": "^8.17.1",
     "copy-webpack-plugin": "^12.0.2",
     "cross-env": "^7.0.3",
     "css-loader": "^6.11.0",
@@ -37,6 +39,7 @@
     "fork-ts-checker-webpack-plugin": "^7.3.0",
     "mime-types": "^2.1.35",
     "node-loader": "^2.1.0",
+    "prettier": "^3.4.2",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
@@ -49,10 +52,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@expo/plist": "^0.2.0",
-    "ajv": "^8.17.1",
-    "electron-squirrel-startup": "^1.0.1",
-    "electron-store": "^10.0.0",
-    "prettier": "^3.4.2"
+    "electron-squirrel-startup": "^1.0.1"
   }
 }

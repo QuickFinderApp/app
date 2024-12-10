@@ -1,3 +1,4 @@
+import { setAppsCache } from "../../modules/stores/apps-cache";
 import { getLinuxApplications } from "./linux";
 import { getMacApplications } from "./macOS";
 import { getWindowsApplications } from "./windows/windows";
@@ -9,12 +10,15 @@ export type ApplicationInfo = {
 };
 
 export async function getApplications(): Promise<ApplicationInfo[]> {
+  let apps: ApplicationInfo[] = [];
   if (process.platform == "darwin") {
-    return await getMacApplications();
+    apps = await getMacApplications();
   } else if (process.platform == "linux") {
-    return await getLinuxApplications();
+    apps = await getLinuxApplications();
   } else if (process.platform == "win32") {
-    return await getWindowsApplications();
+    apps = await getWindowsApplications();
   }
-  return [];
+
+  setAppsCache(apps);
+  return apps;
 }

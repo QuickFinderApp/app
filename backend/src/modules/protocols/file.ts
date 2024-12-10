@@ -15,7 +15,11 @@ export function registerFileProtocol() {
   }
 
   async function handleFileRequest(fileUrl: string): Promise<Response> {
-    let concantatedFilePath = path.join(app.getAppPath(), ".webpack", "renderer", fileUrl).replace(/\/$/, "");
+    // Strip query parameters from the fileUrl
+    const parsedUrl = new URL(fileUrl, "file://");
+    const cleanFileUrl = parsedUrl.pathname;
+
+    let concantatedFilePath = path.join(app.getAppPath(), ".webpack", "renderer", cleanFileUrl).replace(/\/$/, "");
 
     if (!fs.existsSync(concantatedFilePath)) {
       if (fs.existsSync(concantatedFilePath + ".html")) {

@@ -5,6 +5,9 @@ import { contextBridge, ipcRenderer } from "electron";
 import { setupMainGlobal } from "../../modules/globals/main";
 
 contextBridge.exposeInMainWorld("spotter", {
+  getCachedApplications: () => {
+    return ipcRenderer.invoke("get-cached-applications");
+  },
   getApplications: () => {
     return ipcRenderer.invoke("get-applications");
   },

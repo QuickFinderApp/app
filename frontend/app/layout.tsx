@@ -1,4 +1,3 @@
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Themer } from "@/lib/themer";
 import "./globals.css";
 
@@ -11,9 +10,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       <body className="antialiased font-sans">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Themer>{children}</Themer>
-        </ThemeProvider>
+        <Themer>{children}</Themer>
       </body>
     </html>
   );

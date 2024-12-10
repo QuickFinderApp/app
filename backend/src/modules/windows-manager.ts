@@ -119,3 +119,7 @@ export function createWindowManager(windowId: string) {
   };
   return windowManager;
 }
+
+export function getAllWindows() {
+  return windowsManager;
+}

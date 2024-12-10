@@ -2,8 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { getThemeSetting } from "./utility/settings";
+import { themes } from "./utility/themes";
 
 export type Theme = {
+  name?: string;
+  display?: string;
   appearance: "light" | "dark";
   colors: {
     background: string;
@@ -21,23 +25,7 @@ export type Theme = {
   };
 };
 
-const defaultTheme: Theme = {
-  appearance: "dark",
-  colors: {
-    background: "#030303",
-    backgroundSecondary: "#030303",
-    text: "#F2F2F2",
-    selection: "#FFFFFF",
-    loader: "#FFFFFF",
-    red: "#F84E4E",
-    orange: "#F88D4E",
-    yellow: "#FFCC47",
-    green: "#4EF8A7",
-    blue: "#228CF6",
-    purple: "#7B4EF8",
-    magenta: "#F84EBD"
-  }
-};
+const defaultTheme: Theme = themes.find((theme) => theme.appearance === "dark")!;
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -50,8 +38,43 @@ type ThemerProps = {
   children: React.ReactNode;
 };
 
+function getSystemTheme() {
+  if (typeof window === "undefined") {
+    return "dark";
+  }
+
+  if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    return "dark";
+  }
+  return "light";
+}
+
 export function Themer({ children }: ThemerProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+
+  useEffect(() => {
+    function refreshTheme() {
+      getThemeSetting().then((themeId) => {
+        if (themeId == "system") {
+          themeId = getSystemTheme();
+        }
+
+        const newTheme = themes.find((theme) => {
+          return theme.name == themeId;
+        });
+        if (newTheme) {
+          setTheme(newTheme);
+        }
+      });
+    }
+
+    refreshTheme();
+    if (typeof main !== "undefined") {
+      main.onSettingsChanged(() => {
+        refreshTheme();
+      });
+    }
+  }, []);
 
   const colorTheme = useTheme();
 

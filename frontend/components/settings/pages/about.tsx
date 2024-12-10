@@ -20,7 +20,7 @@ export default function SettingsAboutPage() {
           </div>
           <div className="space-y-1 text-left">
             <h1 className="text-3xl font-bold tracking-tight">QuickFinder</h1>
-            <p className="text-lg text-muted-foreground">{version}</p>
+            <p className="text-lg text-text-600">{version}</p>
           </div>
         </div>
       </div>

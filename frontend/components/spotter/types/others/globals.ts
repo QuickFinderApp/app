@@ -7,6 +7,7 @@ export type ApplicationItem = {
 // Declare the global spotter variable
 declare global {
   const spotter: {
+    getCachedApplications: () => Promise<ApplicationItem[]>;
     getApplications: () => Promise<ApplicationItem[]>;
 
     openApp: (appPath: string) => void;
@@ -34,6 +35,8 @@ declare global {
     getVersion: () => Promise<string>;
     getSetting: <T>(setting: string) => Promise<T>;
     setSetting: <T>(setting: string, value: T) => Promise<boolean>;
+
+    onSettingsChanged: (callback: () => void) => void;
   };
 }
 

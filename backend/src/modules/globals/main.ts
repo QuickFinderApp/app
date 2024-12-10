@@ -14,7 +14,9 @@ export function setupMainGlobal(contextBridge: ContextBridge) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSetting: async (setting: string, newValue: any) => {
       return ipcRenderer.invoke("set-setting", setting, newValue);
-    }
+    },
+
+    onSettingsChanged: (callback: () => void) => ipcRenderer.on("settings-changed", () => callback())
   });
 }
 
