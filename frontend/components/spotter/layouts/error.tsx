@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { openLink } from "@/lib/utils";
+import { openLink } from "@/lib/utility/spotter";
 import { SpotterData, SpotterLayout } from "../types/layouts/layouts";
 import { SpotterErrorData } from "../types/layouts/error";
 

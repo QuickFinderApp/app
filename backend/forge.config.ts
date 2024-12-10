@@ -18,11 +18,13 @@ import { execSync } from "child_process";
 let appVersion = "1.0.0";
 let buildVersion = "1.0.0";
 
-const DEV_REGENERATE_FRONTEND = false;
+const DEV_REGENERATE_FRONTEND = true;
 let REGENERATE_FRONTEND = DEV_REGENERATE_FRONTEND;
 if (process.env.BUILD_ENV == "production") {
   REGENERATE_FRONTEND = true;
 }
+
+const FRONTEND_BUILD_PATH = "src/frontend_build";
 
 try {
   const packageContent = readFileSync("../package.json", "utf8");
@@ -82,7 +84,7 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             name: "main_window",
-            html: "./src/out/spotter.html",
+            html: `${FRONTEND_BUILD_PATH}/spotter/index.html`,
             js: "./src/windows/spotter/renderer.ts",
             preload: {
               js: "./src/windows/spotter/preload.ts"
@@ -90,10 +92,18 @@ const config: ForgeConfig = {
           },
           {
             name: "overlay_window",
-            html: "./src/out/overlay.html",
+            html: `${FRONTEND_BUILD_PATH}/overlay/index.html`,
             js: "./src/windows/overlay/renderer.ts",
             preload: {
               js: "./src/windows/overlay/preload.ts"
+            }
+          },
+          {
+            name: "settings_window",
+            html: `${FRONTEND_BUILD_PATH}/settings/index.html`,
+            js: "./src/windows/settings/renderer.ts",
+            preload: {
+              js: "./src/windows/settings/preload.ts"
             }
           }
         ]
@@ -116,7 +126,7 @@ const config: ForgeConfig = {
 // Function to run build script and copy output
 const runBuildScriptAndCopyOutput = () => {
   const outputDir = path.join(__dirname, "../frontend/out");
-  const targetDir = path.join(__dirname, "src/out");
+  const targetDir = path.join(__dirname, FRONTEND_BUILD_PATH);
 
   try {
     // Run the build script

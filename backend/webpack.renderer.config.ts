@@ -19,11 +19,8 @@ export const rendererConfig: Configuration = {
       patterns: [
         // main
         {
-          from: "src/out",
-          to: ".",
-          globOptions: {
-            ignore: ["**/index.html"]
-          }
+          from: "src/frontend_build",
+          to: "."
         }
       ],
       options: {

@@ -4,9 +4,11 @@ import { openApp } from "./ipc/open/app";
 import { openLink } from "./ipc/open/link";
 import { openFileLocation } from "./ipc/open/file-location";
 import { handleSystemAction } from "./ipc/system/init";
+import { getAppsCache } from "./modules/stores/apps-cache";
 
 export default {
   init: () => {
+    ipcMain.handle("get-cached-applications", getAppsCache);
     ipcMain.handle("get-applications", getApplications);
 
     ipcMain.handle("open-app", openApp);

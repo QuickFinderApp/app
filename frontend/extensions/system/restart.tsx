@@ -1,6 +1,6 @@
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
 import { confirmAlert } from "@/lib/alert";
-import { runSystemAction } from "@/lib/utils";
+import { runSystemAction } from "@/lib/utility/spotter";
 
 async function execute() {
   const res = await confirmAlert({

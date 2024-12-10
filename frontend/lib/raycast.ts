@@ -29,6 +29,8 @@ export type RaycastTheme = RaycastThemeVersion1;
 
 export function convertRaycastTheme(raycastTheme: RaycastTheme): Theme {
   const theme: Theme = {
+    name: raycastTheme.name,
+    display: raycastTheme.name,
     appearance: raycastTheme.appearance,
     colors: raycastTheme.colors
   };

@@ -10,7 +10,7 @@ import { SpotterCommand, SpotterCommandType } from "../types/others/commands";
 import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
 import { useApplicationCommands } from "@/extensions/applications/commands";
-import { openFileLocation, openLink } from "@/lib/utils";
+import { openFileLocation, openLink } from "@/lib/utility/spotter";
 import { trackEvent } from "@/lib/umami/umami";
 
 function getActionText(commandType: SpotterCommandType): string {

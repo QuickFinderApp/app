@@ -2,8 +2,16 @@
 
 import { SpotterCommand } from "@/components/spotter/types/others/commands";
 import { ApplicationItem } from "@/components/spotter/types/others/globals";
-import { hideSpotter, openApp } from "@/lib/utils";
+import { hideSpotter, openApp } from "@/lib/utility/spotter";
 import { useEffect, useMemo, useState } from "react";
+
+async function getAllCachedApplications() {
+  try {
+    return await spotter.getCachedApplications();
+  } catch {
+    return [];
+  }
+}
 
 async function getAllApplications() {
   try {
@@ -24,8 +32,17 @@ export function useApplicationCommands() {
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
 
   useEffect(() => {
-    // TODO: Cache this and return stale as its refreshing
+    let finished = false;
+
+    getAllCachedApplications().then((apps) => {
+      if (!finished) {
+        setIsLoading(false);
+        setApplications(apps);
+      }
+    });
+
     getAllApplications().then((apps) => {
+      finished = true;
       setIsLoading(false);
       setApplications(apps);
     });

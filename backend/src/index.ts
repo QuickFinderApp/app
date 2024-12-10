@@ -3,6 +3,9 @@ import ipc from "./ipc";
 import { createOverlayWindow } from "./windows/overlay";
 import { createSpotterWindow } from "./windows/spotter";
 import { registerFileProtocol } from "./modules/protocols/file";
+import { setupRendererBindings } from "./modules/globals/main";
+import { createMainTray } from "./modules/trays/main";
+import "./modules/stores/settings";
 
 // single instance only
 const gotLock = app.requestSingleInstanceLock();
@@ -25,6 +28,7 @@ if (!gotLock) {
     createOverlayWindow();
 
     registerFileProtocol();
+    createMainTray();
   });
 
   app.on("activate", () => {
@@ -39,4 +43,6 @@ if (!gotLock) {
     // Someone tried to run a second instance, we should focus our window.
     createSpotterWindow();
   });
+
+  setupRendererBindings();
 }

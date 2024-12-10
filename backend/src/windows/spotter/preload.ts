@@ -2,8 +2,12 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from "electron";
+import { setupMainGlobal } from "../../modules/globals/main";
 
 contextBridge.exposeInMainWorld("spotter", {
+  getCachedApplications: () => {
+    return ipcRenderer.invoke("get-cached-applications");
+  },
   getApplications: () => {
     return ipcRenderer.invoke("get-applications");
   },
@@ -31,6 +35,9 @@ contextBridge.exposeInMainWorld("spotter", {
   launchConfetti: () => {
     return ipcRenderer.invoke("launch-confetti");
   },
+  openSettings: () => {
+    return ipcRenderer.invoke("open-settings");
+  },
 
   runSystemAction: (action: string) => {
     return ipcRenderer.invoke("system-action", action);
@@ -43,3 +50,5 @@ contextBridge.exposeInMainWorld("spotter", {
     return ipcRenderer.invoke("set-hide-spotter-on-focus-lost", bool);
   }
 });
+
+setupMainGlobal(contextBridge);

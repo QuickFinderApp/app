@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CommonKeyCombos, getActionMenuKeyCombo } from "@/lib/key-combos";
-import { getOS, KeyComboHint, KeyName, OS, useKeyCombo } from "@/lib/keyboard";
+import { KeyComboHint, KeyName, useKeyCombo } from "@/lib/keyboard";
 import { useRouter } from "@/lib/stack-router";
 import { cn } from "@/lib/utils";
 import { Command } from "cmdk";
@@ -401,24 +401,19 @@ export function Spotter({ data: spotterData }: { data: SpotterData }) {
     };
   }, [isSpotterFocusLocked]);
 
-  const [os, setOS] = useState<OS>("Unknown");
-  useEffect(() => {
-    setOS(getOS());
-  }, []);
-
   return (
     <Dialog>
       <Command
         disablePointerSelection
         className={cn(
           "left-1/2 top-1/2",
-          "fixed z-40 w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl shadow-2xl transition-all",
-          "max-md:h-full max-md:rounded-none max-h-screen",
+          "fixed z-40 w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl transition-all",
+          "max-md:h-full max-h-screen",
+          "rounded-xl max-md:rounded-none",
           "md:border border-border",
           "flex flex-col",
           "backdrop-blur-[80px]",
-          os !== "Windows" && "bg-gradient-to-b from-background to-backgroundSecondary",
-          os == "Windows" && "bg-gradient-to-b from-background-full to-backgroundSecondary-full"
+          "bg-gradient-to-b from-background to-backgroundSecondary"
         )}
         loop
         vimBindings={false}

@@ -21,32 +21,3 @@ export const getRelativeTimeText = (date: Date) => {
     return date.toLocaleDateString("en-US");
   }
 };
-
-export function openLink(link: string) {
-  return spotter.openLink(link);
-}
-export function openApp(appPath: string) {
-  return spotter.openApp(appPath);
-}
-export function openFileLocation(filePath: string) {
-  return spotter.openFileLocation(filePath);
-}
-
-export function quitApp() {
-  return spotter.quit();
-}
-
-export function hideSpotter() {
-  return spotter.hide();
-}
-export function showSpotter() {
-  return spotter.show();
-}
-
-export function confetti() {
-  return spotter.launchConfetti();
-}
-
-export function runSystemAction(action: string) {
-  return spotter.runSystemAction(action);
-}

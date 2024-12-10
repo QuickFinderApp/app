@@ -44,6 +44,10 @@ const keyHints = [
   {
     keys: ["ArrowRight"],
     text: "→"
+  },
+  {
+    keys: [" "],
+    text: "Space"
   }
 ];
 
