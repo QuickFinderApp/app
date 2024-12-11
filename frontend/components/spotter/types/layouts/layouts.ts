@@ -5,7 +5,7 @@ import { SpotterErrorData } from "./error";
 import { SpotterImagePreviewData } from "./image-preview";
 import { SpotterListData } from "./list";
 import { SpotterUnknownData } from "./unknown";
-import { SystemInfoLayout } from "./system-info";
+import { SpotterSystemInfoData } from "./system-info";
 
 export type SpotterData =
   | SpotterUnknownData
@@ -13,7 +13,7 @@ export type SpotterData =
   | SpotterListData
   | SpotterImagePreviewData
   | SpotterErrorData
-  | SystemInfoLayout;
+  | SpotterSystemInfoData;
 
 export type SpotterLayout = {
   header?: JSX.Element;

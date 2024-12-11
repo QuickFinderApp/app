@@ -1,6 +1,6 @@
 import { SystemInfo } from "../others/globals";
 
-export interface SystemInfoLayout {
-  type: "system-info";
-  info: SystemInfo;
+export interface SpotterSystemInfoData {
+  element: "SystemInfo";
+  info: SystemInfo | null;
 }

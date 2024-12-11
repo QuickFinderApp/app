@@ -48,6 +48,10 @@ contextBridge.exposeInMainWorld("spotter", {
   },
   setHideOnFocusLost: (bool: boolean) => {
     return ipcRenderer.invoke("set-hide-spotter-on-focus-lost", bool);
+  },
+
+  getSystemInfo: () => {
+    return ipcRenderer.invoke("get-system-info");
   }
 });
 

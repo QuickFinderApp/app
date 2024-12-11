@@ -17,7 +17,6 @@ import { useSpotterError } from "../layouts/error";
 import { useSpotterImagePreview } from "../layouts/image-preview";
 import { useSpotterList } from "../layouts/list";
 import { useSpotterUnknown } from "../layouts/unknown";
-import { useSpotterSystemInfo } from "../layouts/use-system-info";
 import { SpotterData, SpotterLayout } from "../types/layouts/layouts";
 import { SpotterAction } from "../types/others/action-menu";
 import { getActionMenuState, useActionMenu } from "./action-menu";
@@ -27,6 +26,7 @@ import { Icon } from "../elements/icon";
 import { setAlertCallback } from "@/lib/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion } from "motion/react";
+import { useSpotterSystemInfo } from "../layouts/system-info";
 
 const SCROLL_INCREMENTS = 200;
 
@@ -42,7 +42,7 @@ function useSpotterDataHook(spotterData: SpotterData, runAction: ActionRunner): 
     dataHook = useSpotterImagePreview;
   } else if (spotterData.element == "Error") {
     dataHook = useSpotterError;
-  } else if (spotterData.type == "system-info") {
+  } else if (spotterData.element == "SystemInfo") {
     dataHook = useSpotterSystemInfo;
   }
   return dataHook(spotterData, runAction);

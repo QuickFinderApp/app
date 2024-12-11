@@ -15,11 +15,11 @@ export default {
     extend: {
       colors: {
         background: {
-          DEFAULT: getAlpha("var(--background)", 40),
+          DEFAULT: getAlpha("var(--background)", 60),
           full: "color-mix(in srgb, var(--background) 100%, #ffffff)"
         },
         backgroundSecondary: {
-          DEFAULT: getAlpha("var(--backgroundSecondary)", 40),
+          DEFAULT: getAlpha("var(--backgroundSecondary)", 60),
           full: "color-mix(in srgb, var(--backgroundSecondary) 100%, #ffffff)"
         },
         border: {

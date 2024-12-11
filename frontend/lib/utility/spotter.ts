@@ -61,3 +61,10 @@ export function runSystemAction(action: string) {
   }
   return spotter.runSystemAction(action);
 }
+
+export function getSystemInfo() {
+  if (!spotterGlobalExists()) {
+    return Promise.resolve(null);
+  }
+  return spotter.getSystemInfo();
+}
