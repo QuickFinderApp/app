@@ -52,14 +52,6 @@ export function useSpotterSystemInfo(spotterData: SpotterData): SpotterLayout {
               {info.wmTheme}
             </p>
             <p>
-              <span className="text-[#98c379]">Terminal: </span>
-              {info.terminal}
-            </p>
-            <p>
-              <span className="text-[#98c379]">Terminal Font: </span>
-              {info.terminalFont}
-            </p>
-            <p>
               <span className="text-[#98c379]">CPU: </span>
               {info.cpu}
             </p>
