@@ -6,6 +6,7 @@ import { openFileLocation } from "./ipc/open/file-location";
 import { handleSystemAction } from "./ipc/system/init";
 import { getAppsCache } from "./modules/stores/apps-cache";
 import { getSystemInfo } from "./modules/system/info";
+import { initializeFrecencyIPC } from "./ipc/frecency/frecency";
 
 export default {
   init: () => {
@@ -22,5 +23,7 @@ export default {
 
     ipcMain.handle("system-action", handleSystemAction);
     ipcMain.handle("get-system-info", getSystemInfo);
+    
+    initializeFrecencyIPC();
   }
 };
