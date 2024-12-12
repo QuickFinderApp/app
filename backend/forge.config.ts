@@ -11,30 +11,38 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
 
-import fs, { readFileSync } from "fs";
-import path from "path";
-import { execSync } from "child_process";
+import { readFileSync } from "fs";
+import { syncVersion } from "./src/scripts/sync-version";
+import { buildFrontend, FRONTEND_BUILD_PATH } from "./src/scripts/build-frontend";
 
 let appVersion = "1.0.0";
 let buildVersion = "1.0.0";
 
-const DEV_REGENERATE_FRONTEND = true;
-let REGENERATE_FRONTEND = DEV_REGENERATE_FRONTEND;
-if (process.env.BUILD_ENV == "production") {
-  REGENERATE_FRONTEND = true;
-}
-
-const FRONTEND_BUILD_PATH = "src/frontend_build";
-
+// Sync versions across all package.json files
 try {
+  syncVersion();
+  
+  // Read version from root package.json
   const packageContent = readFileSync("../package.json", "utf8");
   const packageJSON = JSON.parse(packageContent);
   if (packageJSON.version) {
     appVersion = packageJSON.version;
     buildVersion = packageJSON.version;
   }
-} catch {
-  /* empty */
+} catch (error) {
+  console.error("Failed to sync/read versions:", error);
+  process.exit(1);
+}
+
+// Build frontend if in production or if DEV_REGENERATE_FRONTEND is true
+const shouldBuildFrontend = process.env.BUILD_ENV === "production" || true;
+if (shouldBuildFrontend) {
+  try {
+    buildFrontend();
+  } catch (error) {
+    console.error("Failed to build frontend:", error);
+    process.exit(1);
+  }
 }
 
 console.log("App Version:", appVersion);
@@ -122,40 +130,5 @@ const config: ForgeConfig = {
     })
   ]
 };
-
-// Function to run build script and copy output
-const runBuildScriptAndCopyOutput = () => {
-  const outputDir = path.join(__dirname, "../frontend/out");
-  const targetDir = path.join(__dirname, FRONTEND_BUILD_PATH);
-
-  try {
-    // Run the build script
-    execSync("npm run build", { cwd: "../frontend", stdio: "inherit" });
-
-    // Check if output directory exists
-    if (fs.existsSync(outputDir)) {
-      // Remove existing contents in the target directory
-      if (fs.existsSync(targetDir)) {
-        fs.rmSync(targetDir, { recursive: true, force: true });
-      }
-
-      // Copy the output directory to the target directory recursively
-      fs.cpSync(outputDir, targetDir, { recursive: true });
-
-      console.log(`Successfully copied build output from ${outputDir} to ${targetDir}`);
-    } else {
-      console.error(`Output directory does not exist: ${outputDir}`);
-      process.exit(1);
-    }
-  } catch (error) {
-    console.error("Error running build script:", error);
-    process.exit(1);
-  }
-};
-
-if (REGENERATE_FRONTEND) {
-  // Run the build script and copy output before the packaging process
-  runBuildScriptAndCopyOutput();
-}
 
 export default config;
