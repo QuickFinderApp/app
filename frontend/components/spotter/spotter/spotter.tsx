@@ -26,6 +26,7 @@ import { Icon } from "../elements/icon";
 import { setAlertCallback } from "@/lib/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion } from "motion/react";
+import { useSpotterSystemInfo } from "../layouts/system-info";
 
 const SCROLL_INCREMENTS = 200;
 
@@ -41,6 +42,8 @@ function useSpotterDataHook(spotterData: SpotterData, runAction: ActionRunner): 
     dataHook = useSpotterImagePreview;
   } else if (spotterData.element == "Error") {
     dataHook = useSpotterError;
+  } else if (spotterData.element == "SystemInfo") {
+    dataHook = useSpotterSystemInfo;
   }
   return dataHook(spotterData, runAction);
 }

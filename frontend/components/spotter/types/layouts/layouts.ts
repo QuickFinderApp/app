@@ -5,13 +5,15 @@ import { SpotterErrorData } from "./error";
 import { SpotterImagePreviewData } from "./image-preview";
 import { SpotterListData } from "./list";
 import { SpotterUnknownData } from "./unknown";
+import { SpotterSystemInfoData } from "./system-info";
 
 export type SpotterData =
   | SpotterUnknownData
   | SpotterDetailData
   | SpotterListData
   | SpotterImagePreviewData
-  | SpotterErrorData;
+  | SpotterErrorData
+  | SpotterSystemInfoData;
 
 export type SpotterLayout = {
   header?: JSX.Element;
