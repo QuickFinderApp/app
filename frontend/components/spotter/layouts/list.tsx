@@ -124,7 +124,7 @@ function useSelection(
   sectionsWithItems: SectionsWithItems,
   customOnSelectionChange?: (value: string) => void
 ) {
-  const [selection, setSelection] = useState<string | undefined>(selectedItemId ?? sectionsWithItems[0]?.items[0]?.id);
+  const [selection, setSelection] = useState<string | undefined>(selectedItemId);
 
   function onSelectionChange(value: string) {
     setSelection(value);
@@ -132,9 +132,6 @@ function useSelection(
   }
 
   const selectedItem = getItemWithId(sectionsWithItems, selection);
-  if (!selectedItem && sectionsWithItems[0]?.items[0]) {
-    setSelection(sectionsWithItems[0].items[0].id);
-  }
 
   return { selection, onSelectionChange, selectedItem };
 }

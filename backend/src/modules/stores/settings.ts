@@ -1,24 +1,12 @@
 import { app, ipcMain } from "electron";
-import Store from "../../../dependencies/electron-storage/index";
 import { getAllWindows } from "../windows-manager";
+import { Store } from "electron-datastore";
 
 const settingsStore = new Store({
   name: "settings",
-  defaults: {
+  template: {
     launchOnLogin: false,
     theme: "system"
-  },
-  schema: {
-    type: "object",
-    properties: {
-      launchOnLogin: {
-        type: "boolean"
-      },
-      theme: {
-        type: "string"
-      }
-    },
-    additionalProperties: false
   }
 });
 

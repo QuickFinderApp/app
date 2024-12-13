@@ -5,13 +5,14 @@ import MainCommands from "@/extensions/main/commands";
 import SystemCommands from "@/extensions/system/commands";
 import DebugCommands from "@/extensions/debug/commands";
 import { generatePageKey, useRouter } from "@/lib/stack-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SpotterCommand, SpotterCommandType } from "../types/others/commands";
 import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
 import { useApplicationCommands } from "@/extensions/applications/commands";
 import { openFileLocation, openLink } from "@/lib/utility/spotter";
 import { trackEvent } from "@/lib/umami/umami";
+import { getFrecencyScores, recordCommandAccess, createFrecencyFilter } from "@/lib/utility/frecency";
 
 function getActionText(commandType: SpotterCommandType): string {
   if (commandType == "Application") {
@@ -31,15 +32,25 @@ function getCommandTypeDisplay(command: SpotterCommandType): string {
 export default function SpotterCommandsHub() {
   const router = useRouter();
 
-  function executeCommand(command: SpotterCommand, context: ActionContext) {
+  async function executeCommand(command: SpotterCommand, context: ActionContext) {
     const trackEventPayload = {
       extensionId: command.extensionId,
       commandId: command.id
     };
 
+    // Record command usage for frecency
+    let commandId = command.id;
+    if (command.extensionId) {
+      commandId = `${command.extensionId}.${commandId}`;
+    }
+    await recordCommandAccess(commandId);
+
+    // Update frecency scores
+    const newScores = await getFrecencyScores();
+    setFrecencyScores(newScores);
+
     if (command.execute) {
       trackEvent("execute_command_callback", trackEventPayload);
-
       command.execute(context);
     } else if (command.render) {
       trackEvent("render_command_view", trackEventPayload);
@@ -59,8 +70,13 @@ export default function SpotterCommandsHub() {
 
   const appCommands = useApplicationCommands();
 
+  const [frecencyScores, setFrecencyScores] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    getFrecencyScores().then(setFrecencyScores);
+  }, []);
+
   const availableCommands: SpotterCommand[] = [...MainCommands, ...SystemCommands, ...DebugCommands, ...appCommands];
-  // TODO: Custom Sorting Algo & Limit Amount of Showing Commands (75 to prevent lag)
 
   const items: SpotterListItem[] = availableCommands.map((command) => {
     let id = command.id;
@@ -136,7 +152,9 @@ export default function SpotterCommandsHub() {
         element: "List",
         isLoading: false,
         searchBarPlaceholder: "Type to search...",
-        items
+        items,
+        shouldFilter: true,
+        filter: createFrecencyFilter(frecencyScores)
       }}
     />
   );

@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 import Ajv from "ajv";
 
 type JsonPrimitive = string | number | boolean | null;
-type JsonObject = { [key: string]: JsonValue };
+type JsonObject = Record<string, unknown>;
 type JsonArray = JsonValue[];
 type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 

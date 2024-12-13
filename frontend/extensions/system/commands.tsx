@@ -20,6 +20,7 @@ const commands = initialCommands.map((command) => {
     extensionId: "system",
     extensionName: "System",
     extensionIcon: "LaptopMinimal",
+    subtitle: "System",
     ...command
   };
 });

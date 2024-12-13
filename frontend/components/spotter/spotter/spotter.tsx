@@ -240,12 +240,16 @@ function SpotterConfirmation({
       transition={{ duration: 0.1 }}
     >
       <motion.div
-        className={cn("w-96 rounded-xl", "dark:bg-gray-900", "border border-border")}
+        className={cn(
+          "w-96 rounded-xl",
+          "bg-gradient-to-b from-background-full to-backgroundSecondary-full",
+          "border border-border"
+        )}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.1 }}
       >
-        <div className="w-full h-full bg-text-100 p-6">
+        <div className="w-full h-full bg-text-100 rounded-xl p-6">
           <div className="flex flex-col items-center space-y-2">
             {icon && (
               <div className="h-10 w-10 flex items-center justify-center">

@@ -45,6 +45,11 @@ declare global {
     getHideOnFocusLost: () => Promise<boolean>;
     setHideOnFocusLost: (value: boolean) => Promise<void>;
     getSystemInfo: () => Promise<SystemInfo>;
+
+    frecency: {
+      recordAccess: (commandId: string) => Promise<void>;
+      getScores: () => Promise<Record<string, number>>;
+    };
   };
 
   const overlay: {

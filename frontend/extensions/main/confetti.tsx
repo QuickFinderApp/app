@@ -7,7 +7,7 @@ async function execute() {
 
 export const ConfettiCommand: SpotterCommand = {
   icon: "PartyPopper",
-  id: "Confetti",
+  id: "confetti",
   title: "Confetti",
   type: "Command",
   execute

@@ -52,6 +52,11 @@ contextBridge.exposeInMainWorld("spotter", {
 
   getSystemInfo: () => {
     return ipcRenderer.invoke("get-system-info");
+  },
+
+  frecency: {
+    recordAccess: (commandId: string) => ipcRenderer.invoke("frecency:record-access", commandId),
+    getScores: () => ipcRenderer.invoke("frecency:get-scores")
   }
 });
 
