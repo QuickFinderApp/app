@@ -1,16 +1,16 @@
-import { getStore } from "../../dependencies/electron-storage";
+import { Store } from "electron-datastore";
 
 interface FrecencyData {
   lastAccessed: number;
   accessCount: number;
 }
 
-interface FrecencyStore {
-  commands: Record<string, FrecencyData>;
-}
+type FrecencyStore = Record<string, FrecencyData>;
 
-const store = getStore<FrecencyStore>("frecency", {
-  commands: {}
+const store = new Store<FrecencyStore>({
+  name: "commands-frecency",
+  template: {},
+  accessPropertiesByDotNotation: false
 });
 
 const FRECENCY_HALF_LIFE = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
@@ -22,24 +22,27 @@ export function calculateFrecencyScore(data: FrecencyData): number {
 }
 
 export async function recordCommandAccess(commandId: string) {
-  const data = await store.get();
-  const command = data.commands[commandId] || { lastAccessed: 0, accessCount: 0 };
-  
-  data.commands[commandId] = {
+  const commandFrecencyData = store.get(commandId) || { lastAccessed: 0, accessCount: 0 };
+
+  const updatedCommandFrecencyData = {
     lastAccessed: Date.now(),
-    accessCount: command.accessCount + 1
+    accessCount: commandFrecencyData.accessCount + 1
   };
-  
-  await store.set(data);
+
+  store.set(commandId, updatedCommandFrecencyData);
+}
+
+export async function resetCommandScore(commandId: string) {
+  store.delete(commandId);
 }
 
 export async function getFrecencyScores(): Promise<Record<string, number>> {
-  const data = await store.get();
+  const allData = store.store;
   const scores: Record<string, number> = {};
-  
-  for (const [commandId, frecencyData] of Object.entries(data.commands)) {
+
+  for (const [commandId, frecencyData] of Object.entries(allData)) {
     scores[commandId] = calculateFrecencyScore(frecencyData);
   }
-  
+
   return scores;
 }

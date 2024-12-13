@@ -5,7 +5,7 @@ import MainCommands from "@/extensions/main/commands";
 import SystemCommands from "@/extensions/system/commands";
 import DebugCommands from "@/extensions/debug/commands";
 import { generatePageKey, useRouter } from "@/lib/stack-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SpotterCommand, SpotterCommandType } from "../types/others/commands";
 import { SpotterListItem } from "../types/layouts/list";
 import { ActionContext, SpotterItem } from "../types/others/action-menu";
@@ -44,7 +44,7 @@ export default function SpotterCommandsHub() {
       commandId = `${command.extensionId}.${commandId}`;
     }
     await recordCommandAccess(commandId);
-    
+
     // Update frecency scores
     const newScores = await getFrecencyScores();
     setFrecencyScores(newScores);
@@ -71,12 +71,12 @@ export default function SpotterCommandsHub() {
   const appCommands = useApplicationCommands();
 
   const [frecencyScores, setFrecencyScores] = useState<Record<string, number>>({});
-  
+
   useEffect(() => {
     getFrecencyScores().then(setFrecencyScores);
   }, []);
 
-  const availableCommands: SpotterCommand[] = [...MainCommands, ...SystemCommands, ...DebugCommands, ...appCommands].slice(0, 75);
+  const availableCommands: SpotterCommand[] = [...MainCommands, ...SystemCommands, ...DebugCommands, ...appCommands];
 
   const items: SpotterListItem[] = availableCommands.map((command) => {
     let id = command.id;

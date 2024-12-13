@@ -10,6 +10,7 @@ const commands = initialCommands.map((command) => {
     extensionId: "main",
     extensionName: "Main",
     extensionIcon: "icon.png",
+    subtitle: "Main",
     ...command
   };
 });

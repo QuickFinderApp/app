@@ -61,6 +61,7 @@ export function useApplicationCommands() {
         icon: app.icon || "FileQuestion",
         id: app.path,
         title: app.name,
+        subtitle: "Application",
         filePath: app.path,
         type: "Application",
         execute

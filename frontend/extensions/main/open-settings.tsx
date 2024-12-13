@@ -7,7 +7,7 @@ async function execute() {
 
 export const OpenSettings: SpotterCommand = {
   icon: "Cog",
-  id: "OpenSettings",
+  id: "open-settings",
   title: "QuickFinder Settings",
   type: "Command",
   execute
