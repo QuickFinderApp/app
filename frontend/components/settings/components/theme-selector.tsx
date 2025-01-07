@@ -78,7 +78,7 @@ export function ThemeSelector() {
                       <div
                         className="rounded-full h-4 w-4"
                         style={{
-                          border: "2px solid #545454",
+                          border: "1px solid #545454",
                           background: `linear-gradient(to bottom right, ${bg1}, ${bg2})`,
                           aspectRatio: 1
                         }}

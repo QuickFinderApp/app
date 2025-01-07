@@ -17,11 +17,12 @@ import { buildFrontend, FRONTEND_BUILD_PATH } from "./src/scripts/build-frontend
 
 let appVersion = "1.0.0";
 let buildVersion = "1.0.0";
+const DEV_REGENERATE_FRONTEND = true;
 
 // Sync versions across all package.json files
 try {
   syncVersion();
-  
+
   // Read version from root package.json
   const packageContent = readFileSync("../package.json", "utf8");
   const packageJSON = JSON.parse(packageContent);
@@ -35,7 +36,7 @@ try {
 }
 
 // Build frontend if in production or if DEV_REGENERATE_FRONTEND is true
-const shouldBuildFrontend = process.env.BUILD_ENV === "production" || true;
+const shouldBuildFrontend = process.env.BUILD_ENV === "production" || DEV_REGENERATE_FRONTEND;
 if (shouldBuildFrontend) {
   try {
     buildFrontend();
