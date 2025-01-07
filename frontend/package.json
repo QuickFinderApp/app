@@ -1,6 +1,7 @@
 {
   "name": "quick-finder",
   "private": true,
+  "version": "0.0.20",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

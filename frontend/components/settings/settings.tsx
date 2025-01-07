@@ -63,7 +63,7 @@ export function SettingsPage({ activeTab }: SettingsPageProps) {
       )}
     >
       <div className="h-[30px] enableDrag flex items-center justify-center">
-        <span className="text-white font-bold">QuickFinder Settings</span>
+        <span className="text-text font-bold">QuickFinder Settings</span>
       </div>
       <SettingsNavBar activeTab={activeTab} tabs={tabs} />
       <Separator />
@@ -72,7 +72,7 @@ export function SettingsPage({ activeTab }: SettingsPageProps) {
       </div>
       <Separator />
       <div className="flex flex-row gap-2 my-2 justify-center">
-        <Button onClick={() => openLink("https://github.com/QuickFinderApp/issues/")}>Open GitHub</Button>
+        <Button onClick={() => openLink("https://github.com/QuickFinderApp/app/")}>Open GitHub</Button>
       </div>
     </div>
   );
