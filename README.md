@@ -1,4 +1,4 @@
-# QuickFinder
+# QuickFinder by [Multibox Labs](https://github.com/MultiboxLabs)
 
 QuickFinder is a cross-platform keystroke launcher, featuring commands, applications and tons of useful actions!
 
